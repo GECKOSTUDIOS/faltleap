@@ -21,6 +21,7 @@ class LeapDB
         $this->connect();
     }
 
+
     private function connect()
     {
         //postgres!
@@ -34,9 +35,6 @@ class LeapDB
         } catch (PDOException $e) {
             die($e->getMessage());
         } finally {
-            // if ($this->connection) {
-            //     $this->connection = null;
-            // }
         }
         if ($this->connection->connect_error) {
             die("Connection failed: " . $this->connection->connect_error);
