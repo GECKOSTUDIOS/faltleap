@@ -5,6 +5,7 @@ class LeapView
     var $db;
     var $request;
     var $session;
+    var $data;
 
     public function __construct(LeapDB $db, LeapRequest $request, LeapSession $session)
     {
@@ -15,7 +16,7 @@ class LeapView
 
     public function __destruct()
     {
-	if (array_key_exists('flash', $_SESSION['view'])) {
+        if (array_key_exists('flash', $_SESSION['view'])) {
             $_SESSION['view']['flash_shown'] = 1;
         }
     }
@@ -90,10 +91,10 @@ class LeapView
 
     private function load_template($template)
     {
-	ob_start();
-		require $template;
-		$content = ob_get_contents();
-		ob_end_clean();
+        ob_start();
+        require $template;
+        $content = ob_get_contents();
+        ob_end_clean();
         return $content;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -16,89 +17,98 @@ declare(strict_types=1);
  */
 class Reverseproxies extends LeapModel
 {
-    /** @var string */
-    public string $table = 'reverseproxies';
+  /** @var string */
+  public string $table = 'reverseproxies';
 
-    /** @var string Primary key column */
-    public string $pk = 'idreverseproxies';
+  /** @var string Primary key column */
+  public string $pk = 'idreverseproxies';
 
-    /** @var array<string, array{type:string,primary:bool,null:bool,default:mixed,extra:mixed}> */
-    public array $cols = [
-  'idreverseproxies' => 
-  [
-    'type' => 'int',
-    'primary' => true,
-    'null' => false,
-    'default' => 'nextval(\'reverseproxies_idreverseproxies_seq\'::regclass)',
-    'extra' => 'identity',],
-  'server_name' => 
-  [
-    'type' => 'string',
-    'primary' => false,
-    'null' => false,
-    'default' => NULL,
-    'extra' => NULL,],
-  'target_address' => 
-  [
-    'type' => 'string',
-    'primary' => false,
-    'null' => false,
-    'default' => NULL,
-    'extra' => NULL,],
-  'target_port' => 
-  [
-    'type' => 'string',
-    'primary' => false,
-    'null' => false,
-    'default' => NULL,
-    'extra' => NULL,],
-  'generate_ssl' => 
-  [
-    'type' => 'bool',
-    'primary' => false,
-    'null' => false,
-    'default' => 'false',
-    'extra' => NULL,],
-  'custom_configs' => 
-  [
-    'type' => 'int',
-    'primary' => false,
-    'null' => true,
-    'default' => NULL,
-    'extra' => NULL,],
-  'is_websocket' => 
-  [
-    'type' => 'bool',
-    'primary' => false,
-    'null' => true,
-    'default' => 'false',
-    'extra' => NULL,],
-  'idusers' => 
-  [
-    'type' => 'int',
-    'primary' => false,
-    'null' => true,
-    'default' => NULL,
-    'extra' => NULL,],
-  'acme_valid_until' => 
-  [
-    'type' => 'datetime',
-    'primary' => false,
-    'null' => true,
-    'default' => NULL,
-    'extra' => NULL,],
-];
+  /** @var array<string, array{type:string,primary:bool,null:bool,default:mixed,extra:mixed}> */
+  public array $cols = [
+    'idreverseproxies' =>
+    [
+      'type' => 'int',
+      'primary' => true,
+      'null' => false,
+      'default' => 'nextval(\'reverseproxies_idreverseproxies_seq\'::regclass)',
+      'extra' => 'identity',
+    ],
+    'server_name' =>
+    [
+      'type' => 'string',
+      'primary' => false,
+      'null' => false,
+      'default' => NULL,
+      'extra' => NULL,
+    ],
+    'target_address' =>
+    [
+      'type' => 'string',
+      'primary' => false,
+      'null' => false,
+      'default' => NULL,
+      'extra' => NULL,
+    ],
+    'target_port' =>
+    [
+      'type' => 'string',
+      'primary' => false,
+      'null' => false,
+      'default' => NULL,
+      'extra' => NULL,
+    ],
+    'generate_ssl' =>
+    [
+      'type' => 'bool',
+      'primary' => false,
+      'null' => false,
+      'default' => 'true',
+      'extra' => NULL,
+    ],
+    'custom_configs' =>
+    [
+      'type' => 'string',
+      'primary' => false,
+      'null' => true,
+      'default' => '',
+      'extra' => NULL,
+    ],
+    'is_websocket' =>
+    [
+      'type' => 'bool',
+      'primary' => false,
+      'null' => true,
+      'default' => 'false',
+      'extra' => NULL,
+    ],
+    'idusers' =>
+    [
+      'type' => 'int',
+      'primary' => false,
+      'null' => true,
+      'default' => NULL,
+      'extra' => NULL,
+    ],
+    'acme_valid_until' =>
+    [
+      'type' => 'datetime',
+      'primary' => false,
+      'null' => true,
+      'default' => NULL,
+      'extra' => NULL,
+    ],
+  ];
 
-    /** @var mixed|null */
-    public ?string $idreverseproxies;
+  /** @var mixed|null */
+  public ?string $idreverseproxies;
 
-    public function __construct($id = null)
-    {
-        parent::__construct($id);
-    }
+  public function __construct($id = null)
+  {
+    parent::__construct($id);
+  }
 
-    public function getTableName(): string
-    {
-        return 'reverseproxies';
-    }
+  public function getTableName(): string
+  {
+    return 'reverseproxies';
+  }
 }

@@ -1,21 +1,31 @@
 <?php
 
-class LeapSession {
+class LeapSession
+{
     private $session;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->session = &$_SESSION;
     }
 
-    public function set($key, $value) {
+    public function set($key, $value)
+    {
         $this->session[$key] = $value;
     }
 
-    public function get($key) {
+    public function get($key)
+    {
         return $this->session[$key] ?? null;
     }
 
-    public function destroy() {
+    public function getUserId()
+    {
+        return $_SESSION['auth']['idusers'];
+    }
+
+    public function destroy()
+    {
         session_destroy();
     }
 }

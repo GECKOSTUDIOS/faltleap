@@ -1,6 +1,6 @@
 <?php
 
-include("../models/UsersModel.php");
+include("../models/Users.model.php");
 
 class AuthController extends LeapController
 {
@@ -33,8 +33,7 @@ class AuthController extends LeapController
         }
 
         if ($user->username == $model->username && sha1($user->password) == sha1($model->password)) {
-            $this->session->set("user", $user);
-            $this->session->set("auth", [$user->idusers, $user->username]);
+            $this->session->set("auth", ['idusers' => $model->idusers, 'username' => $user->username]);
             //$_SESSION['user'] = $user;
             return $this->redirect("/");
         }

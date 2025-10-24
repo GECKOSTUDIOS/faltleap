@@ -38,9 +38,9 @@ class LeapRequest
 
     public function only(array $keys)
     {
-        if($this->isPost()){
+        if ($this->isPost()) {
             $data = $_POST;
-        }else{
+        } else {
             $data = json_decode($this->body, true);
         }
         $result = [];
@@ -51,6 +51,30 @@ class LeapRequest
         }
         $result = (object) $result;
         return $result;
+    }
+
+    public function has(string $key)
+    {
+        if ($this->isPost()) {
+            return isset($_POST[$key]);
+        } elseif ($this->isGet()) {
+            return isset($_GET[$key]);
+        } else {
+            $data = json_decode($this->body, true);
+            return isset($data[$key]);
+        }
+    }
+
+    public function load(string $key)
+    {
+        if ($this->isPost()) {
+            return $_POST[$key];
+        } elseif ($this->isGet()) {
+            return $_GET[$key];
+        } else {
+            $data = json_decode($this->body, true);
+            return $data[$key];
+        }
     }
 
     public function isPost()
@@ -87,5 +111,4 @@ class LeapRequest
     {
         return $this->method === "HEAD";
     }
-
 }
