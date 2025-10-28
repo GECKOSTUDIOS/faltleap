@@ -12,12 +12,19 @@ class LeapView
         if (!array_key_exists("view", $_SESSION)) {
             $_SESSION['view'] = ['flash_shown' => false];
         }
+        // if (array_key_exists('flash', $_SESSION['view'])) {
+        //     if ($_SESSION['view']['flash_shown'] == true) {
+        //         unset($_SESSION['view']['flash']);
+        //         $_SESSION['view'] = ['flash_shown' => false];
+        //     }
+        // }
     }
 
     public function __destruct()
     {
         if (array_key_exists('flash', $_SESSION['view'])) {
             $_SESSION['view']['flash_shown'] = 1;
+            unset($_SESSION['view']['flash']);
         }
     }
 

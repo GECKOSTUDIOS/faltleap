@@ -1,4 +1,6 @@
 <?php
+//set session storage path
+session_save_path((dirname(__FILE__) . '/storage'));
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

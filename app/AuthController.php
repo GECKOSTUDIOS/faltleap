@@ -25,14 +25,14 @@ class AuthController extends LeapController
 
         $model = Users::WhereOne("username = :username AND password = :password", [
             ":username" => $user->username,
-            ":password" => $user->password
+            ":password" => sha1($user->password)
         ]);
         if (!$model) {
             $this->view->flash("Invalid Credentials");
             $this->redirect("/login");
         }
 
-        if ($user->username == $model->username && sha1($user->password) == sha1($model->password)) {
+        if ($user->username == $model->username && sha1($user->password) == $model->password) {
             $this->session->set("auth", ['idusers' => $model->idusers, 'username' => $user->username]);
             //$_SESSION['user'] = $user;
             return $this->redirect("/");
