@@ -66,7 +66,7 @@ class Users extends LeapModel
 ];
 
     /** @var mixed|null */
-    public ?string $idusers;
+    public string $idusers;
 
     public function __construct($id = null)
     {
