@@ -2,18 +2,25 @@
 
 LOCAL_USERNAME=$(whoami)
 CONTAINER_NAME="faltleap_serve_$LOCAL_USERNAME"
+PORT=8090
+# check if container exists. if yes, add a random suffix to the name
+CONTAINER_EXISTS=$(docker ps -a --format '{{.Names}}' | grep "$CONTAINER_NAME")
+if [ -n "$CONTAINER_EXISTS" ]; then
+  CONTAINER_NAME="$CONTAINER_NAME"_$(date +%s)
+  PORT=$((PORT + 1))
+fi
 
 # Clean previous builds
 docker image rm faltleap:latest 2>/dev/null || true
 docker build --no-cache . -t faltleap:latest
 
 # Run container in detached mode
-docker run -d  \
-    -p 8090:80 \
-    -v "$(pwd)":/var/www/localhost/htdocs \
-    -v "$(pwd)/container/default.conf":/etc/nginx/http.d/default.conf \
-    --name "$CONTAINER_NAME" \
-    faltleap:latest
+docker run -d \
+  -p "$PORT":80 \
+  -v "$(pwd)":/var/www/localhost/htdocs \
+  -v "$(pwd)/container/default.conf":/etc/nginx/http.d/default.conf \
+  --name "$CONTAINER_NAME" \
+  faltleap:latest
 
 echo "==========================================="
 echo "Faltleap is now serving your files at: http://localhost:8090"
@@ -27,9 +34,9 @@ docker exec -it "$CONTAINER_NAME" ash -c tail -f /var/log/nginx/error.log
 echo ""
 read -p "Do you want to stop and remove the container? (y/N): " ans
 if [ "$ans" = "y" ] || [ "$ans" = "Y" ]; then
-    echo "Stopping container..."
-    docker stop "$CONTAINER_NAME"
-    docker rm "$CONTAINER_NAME"
+  echo "Stopping container..."
+  docker stop "$CONTAINER_NAME"
+  docker rm "$CONTAINER_NAME"
 else
-    echo "Container '$CONTAINER_NAME' is still running."
+  echo "Container '$CONTAINER_NAME' is still running."
 fi

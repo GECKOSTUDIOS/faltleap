@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+
+namespace FlatLeap;
 
 class LeapController
 {
@@ -7,6 +10,20 @@ class LeapController
     public $request;
     public $session;
     private $destruct;
+
+    /**
+     * Middleware to be applied to all methods in this controller.
+     * Can be overridden in child controllers.
+     *
+     * Examples:
+     * public array $middleware = ['auth'];
+     * public array $middleware = ['auth', 'admin'];
+     * public string $middleware = 'auth';
+     *
+     * @var array|string|null
+     */
+    public $middleware = null;
+
     public function __construct()
     {
         $this->db = new LeapDB();

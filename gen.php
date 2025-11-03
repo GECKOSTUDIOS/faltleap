@@ -1,89 +1,104 @@
 <?php
+declare(strict_types=1);
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-include "lib/LeapDB.php";
+
+// Load autoloader
+require_once __DIR__ . '/lib/LeapAutoloader.php';
+
+$loader = new \FlatLeap\LeapAutoloader();
+$loader->register();
+$loader->addNamespace('FlatLeap', __DIR__ . '/lib');
+
+use FlatLeap\LeapDB;
 
 // ---- USAGE ----
 if (!isset($is_installer)) {
-  $argv = $_SERVER['argv'] ?? [];
-  if (count($argv) < 2) {
-    fwrite(STDERR, "Usage:\n  php gen.php <table> [schema]\n  php gen.php all [schema]\n");
-    exit(1);
-  }
-  $target = $argv[1];
-  $schema = $argv[2] ?? 'public';
+    $argv = $_SERVER['argv'] ?? [];
+    if (count($argv) < 2) {
+        fwrite(STDERR, "Usage:\n  php gen.php <table> [schema1,schema2,...]\n  php gen.php all [schema1,schema2,...]\n");
+        exit(1);
+    }
+    $target = $argv[1];
+    $schemasArg = $argv[2] ?? 'public';
+    $schemas = array_map('trim', explode(',', $schemasArg));
 }
 
 final class LeapGenerator
 {
-  var $db;
-  public function __construct(private string $schema, private ?string $tableOrAll)
-  {
-    $this->db = new LeapDB();
-  }
-
-  public function generate(): void
-  {
-    if ($this->tableOrAll === null || strtolower($this->tableOrAll) === 'all') {
-      foreach ($this->listTables() as $t) {
-        $this->generateModel($t);
-      }
-      return;
+    public $db;
+    public function __construct(private string $schema, private ?string $tableOrAll)
+    {
+        $this->db = new LeapDB();
     }
 
-    $this->generateModel($this->tableOrAll);
-  }
+    public function generate(): void
+    {
+        if ($this->tableOrAll === null || strtolower($this->tableOrAll) === 'all') {
+            foreach ($this->listTables() as $t) {
+                $this->generateModel($t);
+            }
+            return;
+        }
 
-  /** @return string[] */
-  private function listTables(): array
-  {
-    $sql = <<<SQL
+        $this->generateModel($this->tableOrAll);
+    }
+
+    /** @return string[] */
+    private function listTables(): array
+    {
+        $sql = <<<SQL
 SELECT table_name
 FROM information_schema.tables
 WHERE table_schema = :schema
   AND table_type = 'BASE TABLE'
 ORDER BY table_name
 SQL;
-    $stmt = $this->db->connection->prepare($sql);
-    $stmt->execute([':schema' => $this->schema]);
-    return array_map(static fn($r) => $r['table_name'], $stmt->fetchAll());
-  }
-
-  private function generateModel(string $table): void
-  {
-    $columns = $this->getColumns($table);
-    if (!$columns) {
-      fwrite(STDERR, "No columns found for {$this->schema}.{$table}" . PHP_EOL);
-      return;
-    }
-    $pkCols = $this->getPrimaryKey($table);
-
-    // Build $cols array with pg-specific details
-    $pk = $pkCols[0] ?? 'id';
-    $colsArray = [];
-    foreach ($columns as $col) {
-      $name = $col['column_name'];
-      $type = $this->mapPgType($col['data_type'], $col['udt_name']);
-      $isPrimary = in_array($name, $pkCols, true);
-      $isIdentity = ($col['is_identity'] === 'YES') ||
-        (is_string($col['column_default']) && str_starts_with($col['column_default'], 'nextval('));
-
-      $colsArray[$name] = [
-        'type'    => $type,
-        'primary' => $isPrimary,
-        'null'    => ($col['is_nullable'] === 'YES'),
-        'default' => $col['column_default'],
-        'extra'   => $isIdentity ? 'identity' : null,
-      ];
+        $stmt = $this->db->connection->prepare($sql);
+        $stmt->execute([':schema' => $this->schema]);
+        return array_map(static fn ($r) => $r['table_name'], $stmt->fetchAll());
     }
 
-    $classBase   = $this->studly($table);
-    $propsDoc    = $this->buildPropsDoc($columns);
-    $colsExport  = $this->prettyExport($colsArray);
+    private function generateModel(string $table): void
+    {
+        $columns = $this->getColumns($table);
+        if (!$columns) {
+            fwrite(STDERR, "No columns found for {$this->schema}.{$table}" . PHP_EOL);
+            return;
+        }
+        $pkCols = $this->getPrimaryKey($table);
 
-    $php = <<<PHP
+        // Build $cols array with pg-specific details
+        $pk = $pkCols[0] ?? 'id';
+        $colsArray = [];
+        foreach ($columns as $col) {
+            $name = $col['column_name'];
+            $type = $this->mapPgType($col['data_type'], $col['udt_name']);
+            $isPrimary = in_array($name, $pkCols, true);
+            $isIdentity = ($col['is_identity'] === 'YES') ||
+              (is_string($col['column_default']) && str_starts_with($col['column_default'], 'nextval('));
+
+            $colsArray[$name] = [
+              'type'    => $type,
+              'primary' => $isPrimary,
+              'null'    => ($col['is_nullable'] === 'YES'),
+              'default' => $col['column_default'],
+              'extra'   => $isIdentity ? 'identity' : null,
+            ];
+        }
+
+        $classBase   = $this->studly($table);
+        $propsDoc    = $this->buildPropsDoc($columns);
+        $colsExport  = $this->prettyExport($colsArray);
+
+        $php = <<<PHP
 <?php
 declare(strict_types=1);
+
+namespace App\Models;
+
+use FlatLeap\LeapModel;
 
 /**
  * Auto-generated by gen.php from FaltLeap
@@ -95,14 +110,14 @@ class {$classBase} extends LeapModel
     /** @var string */
     public string \$table = '{$table}';
 
+    /** @var string Schema name */
+    public string \$schema = '{$this->schema}';
+
     /** @var string Primary key column */
     public string \$pk = '{$pk}';
 
     /** @var array<string, array{type:string,primary:bool,null:bool,default:mixed,extra:mixed}> */
     public array \$cols = {$colsExport};
-
-    /** @var mixed|null */
-    public string \${$pk};
 
     public function __construct(\$id = null)
     {
@@ -113,25 +128,35 @@ class {$classBase} extends LeapModel
     {
         return '{$table}';
     }
+
+    public function getSchemaName(): string
+    {
+        return '{$this->schema}';
+    }
+
+    public function getFullTableName(): string
+    {
+        return '{$this->schema}.{$table}';
+    }
 }
 
 PHP;
 
-    $outDir = __DIR__ . '/models';
-    if (!is_dir($outDir) && !mkdir($outDir, 0775, true) && !is_dir($outDir)) {
-      throw new RuntimeException("Failed to create models directory: $outDir");
+        $outDir = __DIR__ . '/models';
+        if (!is_dir($outDir) && !mkdir($outDir, 0775, true) && !is_dir($outDir)) {
+            throw new RuntimeException("Failed to create models directory: $outDir");
+        }
+
+        $outFile = $outDir . '/' . $classBase . '.model.php';
+        file_put_contents($outFile, $php);
+        echo "Generated: {$outFile}" . PHP_EOL;
     }
 
-    $outFile = $outDir . '/' . $classBase . '.model.php';
-    file_put_contents($outFile, $php);
-    echo "Generated: {$outFile}" . PHP_EOL;
-  }
-
-  /** @return array<int, array{column_name:string,data_type:string,udt_name:string,is_nullable:string,column_default:?string,is_identity:string}> */
-  private function getColumns(string $table): array
-  {
-    // Use information_schema for portable metadata; include is_identity when available
-    $sql = <<<SQL
+    /** @return array<int, array{column_name:string,data_type:string,udt_name:string,is_nullable:string,column_default:?string,is_identity:string}> */
+    private function getColumns(string $table): array
+    {
+        // Use information_schema for portable metadata; include is_identity when available
+        $sql = <<<SQL
 SELECT
   c.column_name,
   c.data_type,
@@ -144,15 +169,15 @@ WHERE c.table_schema = :schema
   AND c.table_name   = :table
 ORDER BY c.ordinal_position
 SQL;
-    $stmt = $this->db->connection->prepare($sql);
-    $stmt->execute([':schema' => $this->schema, ':table' => $table]);
-    return $stmt->fetchAll();
-  }
+        $stmt = $this->db->connection->prepare($sql);
+        $stmt->execute([':schema' => $this->schema, ':table' => $table]);
+        return $stmt->fetchAll();
+    }
 
-  /** @return string[] column names in PK order */
-  private function getPrimaryKey(string $table): array
-  {
-    $sql = <<<SQL
+    /** @return string[] column names in PK order */
+    private function getPrimaryKey(string $table): array
+    {
+        $sql = <<<SQL
 SELECT kcu.column_name
 FROM information_schema.table_constraints tc
 JOIN information_schema.key_column_usage kcu
@@ -163,86 +188,99 @@ WHERE tc.constraint_type = 'PRIMARY KEY'
   AND tc.table_name   = :table
 ORDER BY kcu.ordinal_position
 SQL;
-    $stmt = $this->db->connection->prepare($sql);
-    $stmt->execute([':schema' => $this->schema, ':table' => $table]);
-    return array_map(static fn($r) => $r['column_name'], $stmt->fetchAll());
-  }
-
-  private function mapPgType(string $dataType, string $udtName): string
-  {
-    $dt  = strtolower($dataType);
-    $udt = strtolower($udtName);
-
-    // Numeric
-    if (str_contains($dt, 'int') || in_array($udt, ['int2', 'int4', 'int8', 'serial', 'serial4', 'serial8', 'bigserial', 'smallint', 'integer', 'bigint'], true)) {
-      return 'int';
-    }
-    if (in_array($dt, ['numeric', 'decimal', 'real', 'double precision'], true)) {
-      return 'float';
+        $stmt = $this->db->connection->prepare($sql);
+        $stmt->execute([':schema' => $this->schema, ':table' => $table]);
+        return array_map(static fn ($r) => $r['column_name'], $stmt->fetchAll());
     }
 
-    // Booleans
-    if ($dt === 'boolean') return 'bool';
+    private function mapPgType(string $dataType, string $udtName): string
+    {
+        $dt  = strtolower($dataType);
+        $udt = strtolower($udtName);
 
-    // Datetime-ish
-    if (in_array($dt, ['timestamp without time zone', 'timestamp with time zone', 'date', 'time without time zone', 'time with time zone'], true)) {
-      return 'datetime';
+        // Numeric
+        if (str_contains($dt, 'int') || in_array($udt, ['int2', 'int4', 'int8', 'serial', 'serial4', 'serial8', 'bigserial', 'smallint', 'integer', 'bigint'], true)) {
+            return 'int';
+        }
+        if (in_array($dt, ['numeric', 'decimal', 'real', 'double precision'], true)) {
+            return 'float';
+        }
+
+        // Booleans
+        if ($dt === 'boolean') {
+            return 'bool';
+        }
+
+        // Datetime-ish
+        if (in_array($dt, ['timestamp without time zone', 'timestamp with time zone', 'date', 'time without time zone', 'time with time zone'], true)) {
+            return 'datetime';
+        }
+
+        // JSON
+        if ($dt === 'json' || $dt === 'jsonb') {
+            return 'json';
+        }
+
+        // Text / strings
+        if (in_array($dt, ['character varying', 'character', 'text', 'uuid', 'citext'], true)) {
+            return 'string';
+        }
+
+        // Bytea
+        if ($dt === 'bytea') {
+            return 'binary';
+        }
+
+        // Arrays -> treat as json for your model schema
+        if (str_ends_with($udt, '[]')) {
+            return 'json';
+        }
+
+        // Fallback
+        return 'string';
     }
 
-    // JSON
-    if ($dt === 'json' || $dt === 'jsonb') return 'json';
-
-    // Text / strings
-    if (in_array($dt, ['character varying', 'character', 'text', 'uuid', 'citext'], true)) return 'string';
-
-    // Bytea
-    if ($dt === 'bytea') return 'binary';
-
-    // Arrays -> treat as json for your model schema
-    if (str_ends_with($udt, '[]')) return 'json';
-
-    // Fallback
-    return 'string';
-  }
-
-  private function studly(string $s): string
-  {
-    $s = preg_replace('/[^a-zA-Z0-9]+/', ' ', $s);
-    $s = ucwords(strtolower(trim($s)));
-    return str_replace(' ', '', $s);
-  }
-
-  private function buildPropsDoc(array $columns): string
-  {
-    $lines = [];
-    foreach ($columns as $col) {
-      $name = $col['column_name'];
-      $type = $this->mapPgType($col['data_type'], $col['udt_name']);
-      $phpType = match ($type) {
-        'int'      => 'int',
-        'float'    => 'float',
-        'bool'     => 'bool',
-        'json'     => 'array|string',
-        'binary'   => 'string', // raw bytes
-        'datetime' => 'string|\DateTimeInterface',
-        'text'     => 'string',
-        default    => 'string|null',
-      };
-      $lines[] = " * @property {$phpType} \${$name}";
+    private function studly(string $s): string
+    {
+        $s = preg_replace('/[^a-zA-Z0-9]+/', ' ', $s);
+        $s = ucwords(strtolower(trim($s)));
+        return str_replace(' ', '', $s);
     }
-    return implode(PHP_EOL, $lines);
-  }
 
-  private function prettyExport(array $arr): string
-  {
-    $export = var_export($arr, true);
-    $export = preg_replace("/array \(/", "[", $export);
-    $export = preg_replace("/\n\s*\),/", "],", $export);
-    $export = preg_replace("/\)$/", "]", $export);
-    return $export;
-  }
+    private function buildPropsDoc(array $columns): string
+    {
+        $lines = [];
+        foreach ($columns as $col) {
+            $name = $col['column_name'];
+            $type = $this->mapPgType($col['data_type'], $col['udt_name']);
+            $phpType = match ($type) {
+                'int'      => 'int',
+                'float'    => 'float',
+                'bool'     => 'bool',
+                'json'     => 'array|string',
+                'binary'   => 'string', // raw bytes
+                'datetime' => 'string|\DateTimeInterface',
+                'text'     => 'string',
+                default    => 'string|null',
+            };
+            $lines[] = " * @property {$phpType} \${$name}";
+        }
+        return implode(PHP_EOL, $lines);
+    }
+
+    private function prettyExport(array $arr): string
+    {
+        $export = var_export($arr, true);
+        $export = preg_replace("/array \(/", "[", $export);
+        $export = preg_replace("/\n\s*\),/", "],", $export);
+        $export = preg_replace("/\)$/", "]", $export);
+        return $export;
+    }
 }
 
 // ---- RUN ----
-$gen = new LeapGenerator($schema, strtolower($target) === 'all' ? null : $target);
-$gen->generate();
+foreach ($schemas as $schema) {
+    echo "Generating models for schema: {$schema}" . PHP_EOL;
+    $gen = new LeapGenerator($schema, strtolower($target) === 'all' ? null : $target);
+    $gen->generate();
+}

@@ -1,64 +1,100 @@
-<style type="text/css">
-  body,
-  html {
-    background-image: url("https://i.imgur.com/xhiRfL6.jpg");
-    height: 100%;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - FlatLeap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
 
-  #profile-img {
-    height: 180px;
-  }
+  <style>
+    html, body {
+      height: 100%;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    }
 
-  .h-80 {
-    height: 80% !important;
-  }
+    .login-container {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  body {
-    background-color: black;
-    height: 100%;
-  }
-</style>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-  crossorigin="anonymous"></script>
-<!------ Include the above in your HEAD tag ---------->
+    .login-card {
+      background: #ffffff;
+      padding: 2rem 2.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
 
-<div class="container h-80">
-  <div class="row align-items-center h-100">
-    <div class="col-3 mx-auto">
-      <div class="text-center">
-        <img id="profile-img" class="rounded-circle profile-img-card" src="img/reverseenginator.png" />
-        <p id="profile-name" class="profile-name-card"></p>
-        {{flash}}
-        <form class="form-signin" method="post">
-          <input type="text" name="username" id="inputUsername" class="form-control form-group"
-            placeholder="username" required autofocus />
-          <input type="password" name="password" id="inputPassword" class="form-control form-group"
-            placeholder="password" required autofocus />
-          <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">
-            enter
-          </button>
-        </form>
-        <!-- /form -->
-      </div>
+    #profile-img {
+      height: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .form-control {
+      margin-bottom: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ced4da;
+    }
+
+    .btn-primary {
+      background-color: #004080;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 500;
+    }
+
+    .btn-primary:hover {
+      background-color: #003366;
+    }
+
+    footer {
+      background-color: #ffffff;
+      border-top: 1px solid #e5e5e5;
+      padding: 1.5rem 0;
+      text-align: center;
+      color: #555;
+      font-size: 0.9rem;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    footer img {
+      height: 50px;
+      margin-bottom: 0.5rem;
+    }
+
+    footer p {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <h5 class="mb-3">Welcome to <span style="color:#ff6600">FlatLeap</span></h5>
+      {{flash}}
+      <form class="form-signin" method="post">
+        <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <button class="btn btn-primary w-100 mt-2" type="submit">Login</button>
+      </form>
     </div>
   </div>
-</div>
-<!-- footer -->
-<footer style="background-color:white;position: absolute; bottom: 0; width: 100%; height: 120px; line-height: 60px;">
-  <div class="container">
-    <div class="row">
-      <div class="col-4 text-center">
-        <img height="80" src="img/faltleap.png" />
-      </div>
-      <div class="col-8 text-center">
-        <p></p>
-        <p>zero dependencies & compromises </p>
-      </div>
-    </div>
-  </div>
-</footer>
-</div>
-</div>
+
+  <footer>
+    <img src="img/faltleap.png" alt="FlatLeap Logo" />
+    <p class="mt-2">Zero dependencies &amp; zero compromises</p>
+  </footer>
+</body>
+</html>

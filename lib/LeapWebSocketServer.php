@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+
+namespace FlatLeap;
 
 class LeapWebSocketServer {
     public function start() {
