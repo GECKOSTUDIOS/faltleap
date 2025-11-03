@@ -72,6 +72,7 @@ php gen.php all public
 ### Routing: Array vs. Magic
 
 **Laravel:**
+
 ```php
 // routes/web.php
 Route::get('/users/{id}', [UserController::class, 'show'])->middleware(['auth', 'verified']);
@@ -80,6 +81,7 @@ Route::resource('posts', PostController::class);
 ```
 
 **Falt Leap:**
+
 ```php
 // conf/router.config.php
 $routes = [
@@ -95,6 +97,7 @@ That's it. One array. No service providers. No route caching. No magic.
 ### Models: Generated vs. Hand-Written
 
 **Laravel:**
+
 ```php
 // app/Models/User.php - 40+ lines of boilerplate
 class User extends Model {
@@ -109,6 +112,7 @@ class User extends Model {
 ```
 
 **Falt Leap:**
+
 ```php
 // Design your schema in PostgreSQL (where it belongs)
 CREATE TABLE users (
@@ -135,6 +139,7 @@ Change your schema? Run `php gen.php users` again. Always in sync. No drift. No 
 ### Queries: Simple Things Stay Simple
 
 **Laravel Eloquent:**
+
 ```php
 $topCustomers = Order::select('customer_id', DB::raw('SUM(amount) as total'))
     ->with('customer')
@@ -147,6 +152,7 @@ $topCustomers = Order::select('customer_id', DB::raw('SUM(amount) as total'))
 ```
 
 **Falt Leap (same query):**
+
 ```php
 $topCustomers = Orders::Query()
     ->select('customer_id', 'SUM(amount) as total')
@@ -166,6 +172,7 @@ Similar API, but **you can read the LeapQueryBuilder source in 10 minutes** and 
 ### Configuration: .env vs. Config Hell
 
 **Laravel:**
+
 ```
 config/app.php (200+ lines)
 config/database.php (150+ lines)
@@ -176,6 +183,7 @@ config/mail.php (120+ lines)
 ```
 
 **Falt Leap:**
+
 ```bash
 # .env
 DB_HOST=localhost
@@ -193,6 +201,7 @@ DB_PASS=secret
 ### You're Tired of Framework Bloat
 
 You've spent your career dealing with:
+
 - **300MB vendor folders** for a CRUD app
 - **Breaking changes** in dependencies you can't control
 - **Update fatigue** from packages you don't even use
@@ -214,6 +223,7 @@ Modern PHP frameworks come with hundreds of dependencies. Falt Leap has **exactl
 ```
 
 **What you get instead:**
+
 - Full control over every line of code
 - No supply chain vulnerabilities
 - Instant deployment (just `git pull`)
@@ -593,7 +603,7 @@ class Users extends LeapModel {
 
 ## Who Is This For?
 
-### You'll love Falt Leap if you:
+### You'll love Falt Leap if you
 
 - ✅ **Value simplicity over abstraction** - You're tired of 10 layers between you and the database
 - ✅ **Trust PostgreSQL more than ORMs** - You know PostgreSQL can do things Laravel's query builder can't
@@ -606,13 +616,13 @@ class Users extends LeapModel {
 - ✅ **Are tired of breaking changes** - The framework is complete. No surprise v10 rewrite coming.
 - ✅ **Want to own your code** - Not rent it from package maintainers who might abandon it
 
-### This is for burned-out senior developers who remember when PHP was fun.
+### This is for burned-out senior developers who remember when PHP was fun
 
 When you could understand your entire stack. When "upgrading" didn't mean 3 days of fixing breaking changes. When you shipped features instead of fighting your framework.
 
 **Falt Leap is that world again.**
 
-### You won't like Falt Leap if you:
+### You won't like Falt Leap if you
 
 - ❌ Need MySQL/SQLite/MongoDB support (we're PostgreSQL-only by design)
 - ❌ Want a massive ecosystem of plugins (we have 14 files, not 14,000 packages)
@@ -690,6 +700,7 @@ No bleeding edge. No "revolutionary" architecture. No framework rewrites every 1
 ### You Own Your Stack
 
 Every dependency is a liability:
+
 - Security vulnerabilities you didn't write
 - Breaking changes you didn't ask for
 - Maintenance burden you can't control
@@ -749,6 +760,7 @@ We're not trying to be everything to everyone. We're trying to be **exactly what
 ### For Senior Developers Who've Seen Enough
 
 You've used:
+
 - Laravel (too much magic)
 - Symfony (too much configuration)
 - Slim (too little structure)
@@ -774,6 +786,7 @@ And because there's no Composer autoloader scanning thousands of files, cold sta
 Falt Leap is intentionally minimal. We're not trying to compete with Laravel or Symfony. We're building a **focused tool for a specific philosophy**.
 
 **What we'll accept:**
+
 - Bug fixes in core components
 - Better PostgreSQL integration
 - Documentation improvements
@@ -781,6 +794,7 @@ Falt Leap is intentionally minimal. We're not trying to compete with Laravel or 
 - Security fixes
 
 **What we won't accept:**
+
 - MySQL/SQLite/MongoDB support
 - Composer dependencies
 - Complex abstractions
@@ -788,6 +802,7 @@ Falt Leap is intentionally minimal. We're not trying to compete with Laravel or 
 - Breaking changes without extremely good reason
 
 **Code contributions must:**
+
 - Use `declare(strict_types=1)`
 - Be fully typed
 - Include clear documentation
@@ -808,7 +823,7 @@ If you're a burned-out senior developer who clicked on this README thinking "fin
 
 This framework exists because we felt the same way.
 
-We were tired of explaining to junior developers why we need 47 config files for a CRUD app. Tired of Stack Overflow answers that just say "use this package." Tired of pretending that complexity equals professionalism.
+We were tired of explaining to junior developers why we need 47 config files for a CRUD app. Tired of Stack Overflow answers that just say "use this package." Tired of pretending that complexity equals professionalism. The whole webstack is so broken, that we need AI to make something half decent - when we actually don't need it at all.
 
 **Simple is professional. Boring is reliable. Small is beautiful.**
 
