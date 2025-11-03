@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+
+namespace FlatLeap;
 
 class LeapView
 {
@@ -6,9 +9,14 @@ class LeapView
     var $request;
     var $session;
     var $data;
+    private $viewsPath;
 
     public function __construct(LeapDB $db, LeapRequest $request, LeapSession $session)
     {
+        // Set absolute path to views directory
+        // Go up from lib/ to project root, then to views/
+        $this->viewsPath = dirname(__DIR__) . '/views';
+
         if (!array_key_exists("view", $_SESSION)) {
             $_SESSION['view'] = ['flash_shown' => false];
         }
@@ -28,15 +36,24 @@ class LeapView
         }
     }
 
+    /**
+     * Set data for the view
+     * @param mixed $data Data to pass to the view
+     * @return void
+     */
+    public function set($data): void
+    {
+        $this->data = $data;
+    }
+
     public function single(string $view)
     {
         $viewcontent = "";
-        if (file_exists("../views/" . $view . ".leap.php")) {
-            $viewcontent = $this->load_template(
-                "../views/" . $view . ".leap.php",
-            );
+        $viewPath = $this->viewsPath . '/' . $view . '.leap.php';
+        if (file_exists($viewPath)) {
+            $viewcontent = $this->load_template($viewPath);
         } else {
-            $viewcontent = "view not found:" . $view . ".leap.php";
+            $viewcontent = "view not found:" . $view . ".leap.php (looked in: " . $viewPath . ")";
         }
         $viewcontent = $this->replaceTags($viewcontent);
         echo $viewcontent;
@@ -58,8 +75,9 @@ class LeapView
             $content = str_replace("{{errors}}", "", $content);
         }
         if (array_key_exists('flash', $_SESSION['view'])) {
-            if (file_exists("views/flash.leap.php")) {
-                $flash_template = $this->load_template("views/flash.leap.php");
+            $flashPath = $this->viewsPath . '/flash.leap.php';
+            if (file_exists($flashPath)) {
+                $flash_template = $this->load_template($flashPath);
             } else {
                 $flash_template = "<div class=\"alert alert-success mt-4\"> <p>{{flash}}</p></div>";
             }
@@ -75,14 +93,14 @@ class LeapView
     public function render($subview = null)
     {
         //load the base template first
-        $base = $this->load_template("../views/index.leap.php");
+        $basePath = $this->viewsPath . '/index.leap.php';
+        $base = $this->load_template($basePath);
         if ($subview) {
-            if (file_exists("../views/" . $subview . ".leap.php")) {
-                $subview = $this->load_template(
-                    "../views/" . $subview . ".leap.php",
-                );
+            $subviewPath = $this->viewsPath . '/' . $subview . '.leap.php';
+            if (file_exists($subviewPath)) {
+                $subview = $this->load_template($subviewPath);
             } else {
-                $subview = "view not found:" . $subview . ".leap.php";
+                $subview = "view not found:" . $subview . ".leap.php (looked in: " . $subviewPath . ")";
             }
         }
         $base = str_replace("{{content}}", $subview, $base);
@@ -94,6 +112,12 @@ class LeapView
     {
         header("Content-Type: application/json");
         echo json_encode($this->data);
+    }
+
+    public function redirect(string $url)
+    {
+        header("Location: " . $url);
+        exit;
     }
 
     private function load_template($template)

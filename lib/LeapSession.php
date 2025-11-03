@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+
+namespace FlatLeap;
 
 class LeapSession
 {
@@ -21,7 +24,7 @@ class LeapSession
 
     public function getUserId()
     {
-        return $_SESSION['auth']['idusers'];
+        return $_SESSION['auth']['idusers'] ?? null;
     }
 
     public function destroy()

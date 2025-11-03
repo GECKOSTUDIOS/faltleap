@@ -1,12 +1,18 @@
 <?php
 
-include('../models/Users.model.php');
+declare(strict_types=1);
+
+namespace App\Controllers;
+
+use FlatLeap\LeapController;
+use App\Models\Users;
 
 class UsersController extends LeapController
 {
     public function index()
     {
-        $users = Users::Where("1 = 1");
+        // Use new Query builder for fetching all users
+        $users = Users::Query()->get();
         $this->view->data = $users;
         $this->view->render('users/index');
     }
@@ -16,7 +22,10 @@ class UsersController extends LeapController
         $user = new Users();
         if ($this->request->isPost()) {
             if ($id) {
-                $user = Users::WhereOne("idusers=" . $id);
+                // Use parameterized query with new query logic
+                $user = Users::Query()
+                    ->where("idusers = :id", [":id" => $id])
+                    ->first();
                 if (!$user) {
                     echo "No user found";
                     die();
@@ -36,7 +45,10 @@ class UsersController extends LeapController
         }
 
         if ($id) {
-            $user = Users::WhereOne("idusers=" . $id);
+            // Use parameterized query with new query logic
+            $user = Users::Query()
+                ->where("idusers = :id", [":id" => $id])
+                ->first();
             if (!$user) {
                 echo "No user found";
                 die();

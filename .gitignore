@@ -3,3 +3,4 @@ migrations/00-users.sql
 execute
 storage
 domains.txt
+conf/.php-cs-fixer.cache

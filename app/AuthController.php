@@ -1,6 +1,9 @@
 <?php
 
-include("../models/Users.model.php");
+namespace App\Controllers;
+
+use FlatLeap\LeapController;
+use App\Models\Users;
 
 class AuthController extends LeapController
 {
@@ -23,10 +26,14 @@ class AuthController extends LeapController
     {
         $user = $this->request->only(["username", "password"]);
 
-        $model = Users::WhereOne("username = :username AND password = :password", [
-            ":username" => $user->username,
-            ":password" => sha1($user->password)
-        ]);
+        // Use parameterized query with new query logic
+        $model = Users::Query()
+            ->where("username = :username AND password = :password", [
+                ":username" => $user->username,
+                ":password" => sha1($user->password)
+            ])
+            ->first();
+
         if (!$model) {
             $this->view->flash("Invalid Credentials");
             $this->redirect("/login");
