@@ -1,0 +1,12 @@
+<?php
+declare(strict_types=1);
+
+// Define your application routes
+// Format: "/path" => "ControllerName@methodName"
+// Dynamic parameters: "/users/{id}" => "UsersController@show"
+// With middleware: "/admin" => ["AdminController@index", ["auth", "admin"]]
+
+$routes = [
+    "/" => "HomeController@index",
+    "/about" => "HomeController@about",
+];

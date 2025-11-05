@@ -1,0 +1,24 @@
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="mb-4"><?= htmlspecialchars($title ?? 'About') ?></h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <p class="lead"><?= htmlspecialchars($content ?? '') ?></p>
+
+                <hr class="my-4">
+
+                <h3 class="h5 mb-3">Framework Features</h3>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> Zero core dependencies</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> PostgreSQL-exclusive support</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> Active Record ORM with query builder</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> PSR-4 autoloading</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> Middleware pipelines</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> Simple template system</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> Schema-driven model generation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

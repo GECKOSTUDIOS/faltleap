@@ -1,0 +1,40 @@
+<?php
+declare(strict_types=1);
+
+// Set session storage path
+session_save_path(__DIR__ . '/storage');
+session_start();
+
+// Enable error reporting in development
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
+// Load Composer autoloader
+require_once __DIR__ . '/vendor/autoload.php';
+
+use FlatLeap\LeapEnv;
+use FlatLeap\LeapEngine;
+
+// Load environment variables from .env file
+$envPath = __DIR__ . '/.env';
+if (!file_exists($envPath)) {
+    die("Error: .env file not found. Please copy .env.example to .env and configure your database settings.");
+}
+LeapEnv::load($envPath);
+
+// Create dbconfig array from environment variables
+$dbconfig = [
+    'dbhost' => LeapEnv::get('DB_HOST'),
+    'dbusername' => LeapEnv::get('DB_USERNAME'),
+    'dbpassword' => LeapEnv::get('DB_PASSWORD'),
+    'dbdatabase' => LeapEnv::get('DB_DATABASE'),
+    'dbschema' => LeapEnv::get('DB_SCHEMA', 'public')
+];
+
+// Load routes
+require_once __DIR__ . '/conf/router.config.php';
+
+// Start the application
+$engine = new LeapEngine();
+$engine->start($routes);

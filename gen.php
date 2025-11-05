@@ -4,12 +4,8 @@ declare(strict_types=1);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-// Load autoloader
-require_once __DIR__ . '/lib/LeapAutoloader.php';
-
-$loader = new \FlatLeap\LeapAutoloader();
-$loader->register();
-$loader->addNamespace('FlatLeap', __DIR__ . '/lib');
+// Load Composer autoloader
+require_once __DIR__ . '/vendor/autoload.php';
 
 use FlatLeap\LeapDB;
 

@@ -1,0 +1,42 @@
+{
+    "name": "faltleap/core",
+    "description": "A radically simple, zero-dependency PHP framework for PostgreSQL purists",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "framework",
+        "mvc",
+        "postgresql",
+        "zero-dependencies",
+        "active-record",
+        "php8"
+    ],
+    "authors": [
+        {
+            "name": "Falt Leap Framework Contributors"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlatLeap\\": "src/",
+            "App\\Controllers\\": "app/",
+            "App\\Middleware\\": "middleware/"
+        },
+        "classmap": [
+            "models/"
+        ]
+    },
+    "bin": [
+        "gen.php"
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2.x-dev"
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "name": "mycompany/myapp",
+    "description": "My Falt Leap Application",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.0",
+        "faltleap/core": "^0.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\Controllers\\": "app/",
+            "App\\Middleware\\": "middleware/"
+        },
+        "classmap": [
+            "models/"
+        ]
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
