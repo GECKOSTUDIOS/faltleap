@@ -2,7 +2,7 @@
 
 ![PHP 8+](https://img.shields.io/badge/PHP-8%2B-777BB4?style=flat-square&logo=php)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Only-336791?style=flat-square&logo=postgresql)
-![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-success?style=flat-square)
+![Zero Core Dependencies](https://img.shields.io/badge/Core_Dependencies-0-success?style=flat-square)
 ![Lines of Code](https://img.shields.io/badge/Lines_of_Code-2,191-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-BSD-green?style=flat-square)
 
@@ -11,7 +11,7 @@
 > *"Finally, a framework that doesn't fight me. I can read the entire codebase in an afternoon and actually understand what's happening. No magic. No surprises. Just clean code that does what it says."*
 > — Every burned-out senior developer who finds this
 
-Falt Leap is an opinionated MVC framework that throws out the complexity of modern PHP development and gets back to basics. No Composer. No bloated dependencies. No framework-imposed abstractions between you and your database. Just clean, fast PHP that embraces PostgreSQL's power.
+Falt Leap is an opinionated MVC framework that throws out the complexity of modern PHP development and gets back to basics. The core has zero dependencies. Clean, fast PHP that embraces PostgreSQL's power. Distributed via Composer for your convenience.
 
 **Version 0.2** introduces advanced query building, PSR-4 autoloading, middleware pipelines, and `.env` support—all while staying under **2,200 lines of core code**.
 
@@ -20,26 +20,24 @@ Falt Leap is an opinionated MVC framework that throws out the complexity of mode
 ## Get Started in 60 Seconds
 
 ```bash
-# Clone the repo
-git clone https://github.com/yourrepo/faltleap myapp
+# Create a new app
+composer create-project faltleap/app myapp
 cd myapp
+
+# Configure your database
+cp .env.example .env
+# Edit .env with your PostgreSQL credentials
+
+# Generate models from your schema
+php vendor/bin/gen all public
 
 # Start the dev server (Docker)
 ./run.sh
 
-# OR configure manually
-echo "DB_HOST=localhost
-DB_NAME=myapp
-DB_USER=postgres
-DB_PASS=password" > .env
-
-# Generate models from your schema
-php gen.php all public
-
 # Done. Visit http://localhost:8090
 ```
 
-**No `composer install`. No `npm install`. No build step. Just code.**
+**One `composer` command. No `npm install`. No build step. No bloated vendor folder. Just code.**
 
 ---
 
@@ -48,9 +46,9 @@ php gen.php all public
 | Feature | Falt Leap | Laravel 11 | Symfony 7 |
 |---------|-----------|------------|-----------|
 | **Lines of Code** | 2,191 | ~500,000+ | ~800,000+ |
-| **Dependencies** | 0 | 30+ direct, 100+ total | 50+ direct, 200+ total |
-| **Vendor Folder Size** | 0 bytes | ~274 MB | ~350 MB |
-| **Fresh Install Time** | < 1 second | 2-5 minutes | 3-7 minutes |
+| **Core Dependencies** | 0 | 30+ direct, 100+ total | 50+ direct, 200+ total |
+| **Vendor Folder Size** | ~200 KB | ~274 MB | ~350 MB |
+| **Fresh Install Time** | ~10 seconds | 2-5 minutes | 3-7 minutes |
 | **Routing** | ✅ Array-based | ✅ Attribute/File-based | ✅ YAML/Annotation |
 | **Query Builder** | ✅ With joins & aggregates | ✅ Full Eloquent | ✅ Doctrine |
 | **Middleware** | ✅ Simple pipelines | ✅ Complex pipelines | ✅ Complex pipelines |
@@ -210,25 +208,29 @@ You've spent your career dealing with:
 
 **Falt Leap says: enough.**
 
-### Zero Dependencies, Zero Compromises
+### Zero Core Dependencies, Maximum Control
 
-Modern PHP frameworks come with hundreds of dependencies. Falt Leap has **exactly zero**. Every line of code is in this repository. The entire framework is **2,191 lines**. You can read and understand it in an afternoon.
+Modern PHP frameworks come with hundreds of dependencies. Falt Leap's core has **exactly zero**. Every line of framework code is in the core package. The entire framework is **2,191 lines**. You can read and understand it in an afternoon.
 
 ```bash
-# No composer install
+# One composer command to get started
+composer create-project faltleap/app myapp
+
+# Vendor folder: ~200KB (just the core framework)
+# No transitive dependencies
 # No npm install
 # No build process
 # No node_modules black hole
-# Just clone and code
 ```
 
-**What you get instead:**
+**What you get:**
 
-- Full control over every line of code
-- No supply chain vulnerabilities
-- Instant deployment (just `git pull`)
-- Zero dependency conflicts
+- Full control over every line of framework code
+- No supply chain vulnerabilities in core
+- Easy updates via `composer update faltleap/core`
+- Version pinning when you need stability
 - Framework code you can actually understand
+- Composer for distribution, not for dependency hell
 
 ### PostgreSQL-First (and Only)
 
@@ -401,11 +403,13 @@ Every framework file uses `declare(strict_types=1)`. Because it's 2025 and we sh
 
 ## What Makes This Opinionated?
 
-### 1. **No Composer, By Design**
+### 1. **Zero Core Dependencies, By Design**
 
-We're not anti-dependency. We're anti-complexity. Every external package is a potential security risk, maintenance burden, and breaking change waiting to happen. Falt Leap is entirely self-contained.
+We're not anti-dependency. We're anti-complexity. Every external package is a potential security risk, maintenance burden, and breaking change waiting to happen. Falt Leap's core is entirely self-contained with **zero dependencies**.
 
 **The entire framework is 2,191 lines.** That's less than a single Laravel controller in some projects.
+
+We use Composer for distribution and convenience, not for pulling in hundreds of packages. Your `vendor` folder stays tiny.
 
 ### 2. **PostgreSQL Only**
 
@@ -455,34 +459,42 @@ We don't try to turn SQL into an object-oriented query language. SQL is already 
 ### Installation
 
 ```bash
-git clone <repository-url>
-cd sensorboard
-./run.sh  # Docker development server on http://localhost:8090
+# Create a new app
+composer create-project faltleap/app myapp
+cd myapp
+
+# Configure database
+cp .env.example .env
+# Edit .env with your PostgreSQL credentials
+
+# Generate models from your schema
+php vendor/bin/gen all public
+
+# Start dev server
+./run.sh  # Docker on http://localhost:8090
 ```
 
 Or configure manually:
 
-1. Create `/conf/db.config.php`:
+1. Your `.env` file:
 
-```php
-<?php
-$dbhost = "localhost";
-$dbusername = "your_user";
-$dbpassword = "your_password";
-$dbdatabase = "your_database";
-$dbschema = "public";
-?>
+```bash
+DB_HOST=localhost
+DB_NAME=myapp
+DB_USER=postgres
+DB_PASS=secret
+DB_SCHEMA=public
 ```
 
 2. Generate models from your schema:
 
 ```bash
-php gen.php all
+php vendor/bin/gen all
 ```
 
 3. Point your web server to `/public/`
 
-That's it. No `composer install`. No `npm install`. No webpack config.
+That's it. One `composer` command. No `npm install`. No webpack config.
 
 ### Your First Route
 
@@ -706,9 +718,9 @@ Every dependency is a liability:
 - Maintenance burden you can't control
 - Abandoned packages that break your build
 
-**Falt Leap has zero dependencies.** You own every line. You control every update. You decide when things change.
+**Falt Leap's core has zero dependencies.** You own every line of framework code. You control updates with `composer.json` version constraints. You decide when things change.
 
-No one can break your code except you.
+The framework can't break your code with surprise updates.
 
 ## Documentation
 
@@ -736,16 +748,16 @@ $ find myapp/vendor -name "*.php" | wc -l
 **Falt Leap:**
 
 ```bash
-$ git clone faltleap myapp
-$ du -sh myapp/lib
-124K    myapp/lib
-$ find myapp/lib -name "*.php" | wc -l
+$ composer create-project faltleap/app myapp
+$ du -sh myapp/vendor
+200K    myapp/vendor
+$ find myapp/vendor/faltleap -name "*.php" | wc -l
 14 files
 ```
 
-**274MB vs 124KB. 32,847 files vs 14 files.**
+**274MB vs 200KB. 32,847 files vs 14 files.**
 
-And you know what? The Falt Leap version will still be working in 5 years. No breaking changes. No deprecated APIs. No surprise rewrites.
+And you know what? The Falt Leap version will still be working in 5 years. No breaking changes. No deprecated APIs. No surprise rewrites. Just pin the version in your `composer.json` and you're done.
 
 ### This Framework Is Complete
 
@@ -796,7 +808,7 @@ Falt Leap is intentionally minimal. We're not trying to compete with Laravel or 
 **What we won't accept:**
 
 - MySQL/SQLite/MongoDB support
-- Composer dependencies
+- External dependencies in the core
 - Complex abstractions
 - Enterprise features for the sake of checkboxes
 - Breaking changes without extremely good reason

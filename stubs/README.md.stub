@@ -1,0 +1,128 @@
+# My Falt Leap Application
+
+A web application built with Falt Leap Framework - a radically simple, zero-dependency PHP framework for PostgreSQL.
+
+## Quick Start
+
+### 1. Configure Database
+
+Copy `.env.example` to `.env` and configure your PostgreSQL connection:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env`:
+```
+DB_HOST=localhost
+DB_USERNAME=postgres
+DB_PASSWORD=yourpassword
+DB_DATABASE=myapp
+DB_SCHEMA=public
+```
+
+### 2. Create Database Schema
+
+Create your tables in PostgreSQL:
+
+```sql
+CREATE TABLE users (
+    idusers SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### 3. Generate Models
+
+```bash
+php vendor/bin/gen all public
+```
+
+This will generate Active Record models in the `models/` directory.
+
+### 4. Define Routes
+
+Edit `conf/router.config.php`:
+
+```php
+$routes = [
+    "/" => "HomeController@index",
+    "/users" => "UsersController@index",
+    "/users/{id}" => "UsersController@show"
+];
+```
+
+### 5. Create Controllers
+
+Controllers go in the `app/` directory and extend `LeapController`:
+
+```php
+<?php
+namespace App\Controllers;
+
+use FlatLeap\LeapController;
+use App\Models\Users;
+
+class UsersController extends LeapController
+{
+    public function index()
+    {
+        $users = Users::Query()->get();
+        $this->view->data = $users;
+        $this->view->render('users/index');
+    }
+}
+```
+
+### 6. Create Views
+
+Views go in the `views/` directory with `.leap.php` extension:
+
+```php
+<!-- views/users/index.leap.php -->
+<h1>Users</h1>
+<ul>
+    <?php foreach ($data as $user): ?>
+        <li><?= htmlspecialchars($user->username) ?></li>
+    <?php endforeach; ?>
+</ul>
+```
+
+### 7. Run Development Server
+
+Using Docker:
+```bash
+./run.sh
+```
+
+Visit http://localhost:8090
+
+## Project Structure
+
+```
+/app/               Controllers
+/models/            Auto-generated models
+/views/             Templates (.leap.php)
+/public/            Web root
+/conf/              Configuration
+  router.config.php Routes
+/storage/           Session storage
+/middleware/        Custom middleware
+.env                Environment config
+```
+
+## Documentation
+
+- Framework documentation: Check `vendor/faltleap/core/README.md`
+- Claude Code instructions: See `CLAUDE.md`
+
+## Learn More
+
+- [Falt Leap Framework](https://github.com/yourrepo/faltleap-core)
+- PostgreSQL Documentation: https://www.postgresql.org/docs/
+
+## License
+
+Your application license here.

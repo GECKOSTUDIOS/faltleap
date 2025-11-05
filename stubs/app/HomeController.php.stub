@@ -1,0 +1,31 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Controllers;
+
+use FlatLeap\LeapController;
+
+class HomeController extends LeapController
+{
+    public function index()
+    {
+        $data = (object)[
+            'title' => 'Welcome to Falt Leap',
+            'message' => 'Your application is ready!'
+        ];
+
+        $this->view->data = $data;
+        $this->view->render('home/index');
+    }
+
+    public function about()
+    {
+        $data = (object)[
+            'title' => 'About',
+            'content' => 'Built with Falt Leap Framework'
+        ];
+
+        $this->view->data = $data;
+        $this->view->render('home/about');
+    }
+}

@@ -1,0 +1,72 @@
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">
+                <i class="bi bi-rocket-takeoff text-primary"></i>
+                <?= htmlspecialchars($title ?? 'Welcome') ?>
+            </h1>
+            <p class="lead text-muted"><?= htmlspecialchars($message ?? '') ?></p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-3">Getting Started</h2>
+
+                <div class="mb-4">
+                    <h3 class="h6 fw-bold">1. Create Your Database Schema</h3>
+                    <p class="text-muted">Design your tables in PostgreSQL with proper types and constraints.</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="h6 fw-bold">2. Generate Models</h3>
+                    <pre class="bg-light p-3 rounded"><code>php vendor/bin/gen all public</code></pre>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="h6 fw-bold">3. Define Routes</h3>
+                    <p class="text-muted">Edit <code>conf/router.config.php</code> to add your application routes.</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="h6 fw-bold">4. Build Controllers</h3>
+                    <p class="text-muted">Create controllers in <code>app/</code> that extend <code>LeapController</code>.</p>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Check out <code>CLAUDE.md</code> for detailed framework documentation.
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-lightning-charge text-warning display-4"></i>
+                        <h3 class="h6 mt-3">Fast & Simple</h3>
+                        <p class="text-muted small">Zero dependencies, 2,191 lines of code</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-database text-primary display-4"></i>
+                        <h3 class="h6 mt-3">PostgreSQL-First</h3>
+                        <p class="text-muted small">Built exclusively for PostgreSQL</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-code-square text-success display-4"></i>
+                        <h3 class="h6 mt-3">Readable Code</h3>
+                        <p class="text-muted small">Understand the entire framework in an afternoon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
