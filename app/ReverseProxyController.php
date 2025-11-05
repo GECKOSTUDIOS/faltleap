@@ -30,17 +30,12 @@ class ReverseProxyController extends LeapController
             }
         }
 
-
         $data = Reverseproxies::Query()
-          ->join(Users::class, 'idusers', 'INNER')
+          ->join(Users::class, 'idusers', 'LEFT')
           ->get();
+
         // $data = $this->db->query("SELECT * FROM reverseproxies");
-
         $this->view->data = $data;
-
-
-
-
         $this->view->render('reverse_proxy/index');
     }
 
