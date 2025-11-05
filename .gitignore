@@ -1,19 +1,6 @@
-# Environment & Configuration
-.env
-conf/db.config.php
-
 # Composer
 /vendor/
 composer.lock
-
-# Storage & Cache
-storage/
-conf/.php-cs-fixer.cache
-
-# Development
-migrations/00-users.sql
-execute
-domains.txt
 
 # IDE
 .vscode/
@@ -21,3 +8,7 @@ domains.txt
 *.swp
 *.swo
 *~
+.DS_Store
+
+# Development files (not part of core package)
+.php-cs-fixer.cache
