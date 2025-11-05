@@ -1,6 +1,23 @@
+# Environment & Configuration
+.env
 conf/db.config.php
+
+# Composer
+/vendor/
+composer.lock
+
+# Storage & Cache
+storage/
+conf/.php-cs-fixer.cache
+
+# Development
 migrations/00-users.sql
 execute
-storage
 domains.txt
-conf/.php-cs-fixer.cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
