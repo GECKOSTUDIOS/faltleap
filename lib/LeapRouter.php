@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace FlatLeap;
+namespace FaltLeap;
 
 // Define a LeapRouter to handle route matching and controller/action extraction
 class LeapRouter

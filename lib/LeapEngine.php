@@ -1,15 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
-namespace FlatLeap;
+namespace FaltLeap;
 
 class LeapEngine
 {
-    var $server;
+    public $server;
     public function __construct()
     {
         //if called on the cli, start the websocket server
-        if(PHP_SAPI=='cli'){
+        if (PHP_SAPI == 'cli') {
             $this->server = new LeapWebSocketServer();
             $this->server->start();
         }
@@ -20,11 +21,11 @@ class LeapEngine
         $route = new LeapRouter();
         $currentRoute = $route->getRoute($routes);
         //laod the file
-        if(!$currentRoute){
+        if (!$currentRoute) {
             echo "Route not found";
             return;
         }
-        if(!array_key_exists("file",$currentRoute)){
+        if (!array_key_exists("file", $currentRoute)) {
             echo "Controller (file) not found";
             return;
         }
@@ -38,7 +39,7 @@ class LeapEngine
 
                 // Execute middleware stack with controller method as final action
                 $params = array_values($currentRoute['params']);
-                $finalAction = function() use ($instance, $currentRoute, $params) {
+                $finalAction = function () use ($instance, $currentRoute, $params) {
                     return call_user_func_array([$instance, $currentRoute['method']], $params);
                 };
 

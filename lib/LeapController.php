@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace FlatLeap;
+namespace FaltLeap;
 
 class LeapController
 {
@@ -29,7 +30,7 @@ class LeapController
         $this->db = new LeapDB();
         $this->request = new LeapRequest();
         $this->session = new LeapSession();
-	$this->view = new LeapView($this->db,$this->request,$this->session);
+        $this->view = new LeapView($this->db, $this->request, $this->session);
     }
     public function redirect($url, $params = [])
     {

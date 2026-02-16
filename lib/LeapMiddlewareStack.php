@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace FlatLeap;
+namespace FaltLeap;
 
 /**
  * Manages the execution chain of middleware.

@@ -1,14 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
-namespace FlatLeap;
+namespace FaltLeap;
 
 class LeapView
 {
-    var $db;
-    var $request;
-    var $session;
-    var $data;
+    public $db;
+    public $request;
+    public $session;
+    public $data;
     private $viewsPath;
 
     public function __construct(LeapDB $db, LeapRequest $request, LeapSession $session)

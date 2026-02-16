@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
-namespace FlatLeap;
+namespace FaltLeap;
 
 /**
- * PSR-4 Autoloader for FlatLeap Framework
+ * PSR-4 Autoloader for FaltLeap Framework
  * Automatically loads classes based on namespace and file location
  */
 class LeapAutoloader

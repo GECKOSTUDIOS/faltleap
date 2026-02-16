@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FlatLeap;
+namespace FaltLeap;
 
 use PDO;
 

@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace FlatLeap;
+namespace FaltLeap;
 
 /**
  * Abstract base class for all middleware in the Falt Leap Framework.

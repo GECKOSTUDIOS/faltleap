@@ -1,10 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
-namespace FlatLeap;
+namespace FaltLeap;
 
-class LeapWebSocketServer {
-    public function start() {
+class LeapWebSocketServer
+{
+    public function start()
+    {
         $host = '0.0.0.0';
         $port = 8080;
 
@@ -50,7 +53,7 @@ class LeapWebSocketServer {
                 }
             }
             fclose($conn);
+        }
     }
-}
 
 }
