@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  <title>FlatLeap - Admin Panel</title>
+  <title>FaltLeap - Admin Panel</title>
 
   <!-- Volt CSS -->
   <link type="text/css" href="/volt/css/volt.css" rel="stylesheet">
@@ -15,7 +15,7 @@
   <!-- Mobile Navigation -->
   <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
     <a class="navbar-brand me-lg-5" href="/">
-      <span style="color:#ff6600">FlatLeap</span> Dashboard
+      <span style="color:#ff6600">FaltLeap</span> Dashboard
     </a>
     <div class="d-flex align-items-center">
       <button class="navbar-toggler d-lg-none collapsed" type="button" data-bs-toggle="collapse"
@@ -55,7 +55,7 @@
             <span class="sidebar-icon">
               <i class="bi bi-speedometer2"></i>
             </span>
-            <span class="mt-1 ms-1 sidebar-text"><span style="color:#ff6600">FlatLeap</span> Dashboard</span>
+            <span class="mt-1 ms-1 sidebar-text"><span style="color:#ff6600">FaltLeap</span> Dashboard</span>
           </a>
         </li>
 

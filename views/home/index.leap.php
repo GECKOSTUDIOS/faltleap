@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12 mb-4">
         <h2 class="h4">Dashboard Overview</h2>
-        <p class="text-gray-600">Welcome to the <span style="color:#ff6600">FlatLeap</span> Admin Panel</p>
+        <p class="text-gray-600">Welcome to the <span style="color:#ff6600">FaltLeap</span> Admin Panel</p>
     </div>
 </div>
 
