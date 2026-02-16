@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use FlatLeap\LeapController;
+use FaltLeap\LeapController;
 use App\Models\Users;
 
 class AuthController extends LeapController

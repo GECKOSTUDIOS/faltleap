@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use FlatLeap\LeapController;
+use FaltLeap\LeapController;
 use App\Models\Users;
 
 class UsersController extends LeapController

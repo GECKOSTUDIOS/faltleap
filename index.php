@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 //set session storage path
@@ -10,22 +11,22 @@ ini_set('display_startup_errors', 1);
 // Load autoloader
 require_once __DIR__ . '/lib/LeapAutoloader.php';
 
-$loader = new \FlatLeap\LeapAutoloader();
+$loader = new \FaltLeap\LeapAutoloader();
 $loader->register();
-$loader->addNamespace('FlatLeap', __DIR__ . '/lib');
-$loader->addNamespace('FlatLeap\\Helpers', __DIR__ . '/lib/helpers');
+$loader->addNamespace('FaltLeap', __DIR__ . '/lib');
+$loader->addNamespace('FaltLeap\\Helpers', __DIR__ . '/lib/helpers');
 $loader->addNamespace('App\\Controllers', __DIR__ . '/app');
 $loader->addNamespace('App\\Models', __DIR__ . '/models');
 $loader->addNamespace('App\\Middleware', __DIR__ . '/middleware');
 
-use FlatLeap\LeapEnv;
-use FlatLeap\LeapEngine;
+use FaltLeap\LeapEnv;
+use FaltLeap\LeapEngine;
 
 // Load environment variables from .env file
 $envPath = dirname(__FILE__) . '/.env';
 if (!file_exists($envPath)) {
-  echo "Please run install.php first on the cli (php install.php)";
-  die();
+    echo "Please run install.php first on the cli (php install.php)";
+    die();
 }
 LeapEnv::load($envPath);
 
