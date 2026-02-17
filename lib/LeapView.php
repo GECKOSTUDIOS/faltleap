@@ -9,7 +9,8 @@ class LeapView
     public $db;
     public $request;
     public $session;
-    public $data;
+    private mixed $_data = null;
+    private mixed $_rawData = null;
     private $viewsPath;
 
     public function __construct(LeapDB $db, LeapRequest $request, LeapSession $session)
@@ -29,6 +30,40 @@ class LeapView
         // }
     }
 
+    public function __get(string $name): mixed
+    {
+        if ($name === 'data') {
+            return new LeapSafeData($this->_data);
+        }
+        if ($name === 'rawData') {
+            return $this->_rawData;
+        }
+        return null;
+    }
+
+    public function __set(string $name, mixed $value): void
+    {
+        if ($name === 'data') {
+            $this->_data = $value;
+            return;
+        }
+        if ($name === 'rawData') {
+            $this->_rawData = $value;
+            return;
+        }
+    }
+
+    public function __isset(string $name): bool
+    {
+        if ($name === 'data') {
+            return !empty($this->_data);
+        }
+        if ($name === 'rawData') {
+            return $this->_rawData !== null;
+        }
+        return false;
+    }
+
     public function __destruct()
     {
         if (array_key_exists('flash', $_SESSION['view'])) {
@@ -44,7 +79,7 @@ class LeapView
      */
     public function set($data): void
     {
-        $this->data = $data;
+        $this->_data = $data;
     }
 
     public function single(string $view)
@@ -109,13 +144,18 @@ class LeapView
     public function renderJson()
     {
         header("Content-Type: application/json");
-        echo json_encode($this->data);
+        echo json_encode($this->_data);
     }
 
     public function redirect(string $url)
     {
         header("Location: " . $url);
         exit;
+    }
+
+    public function e(mixed $value): string
+    {
+        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
     }
 
     private function load_template($template)

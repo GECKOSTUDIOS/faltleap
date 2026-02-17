@@ -34,11 +34,11 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <i class="bi bi-globe text-primary me-2"></i>
-                                            <span class="fw-normal"><?php echo htmlspecialchars($r->server_name); ?></span>
+                                            <span class="fw-normal"><?php echo $r->server_name; ?></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="text-muted"><?php echo htmlspecialchars($r->target_address); ?>:<?php echo htmlspecialchars($r->target_port); ?></span>
+                                        <span class="text-muted"><?php echo $r->target_address; ?>:<?php echo $r->target_port; ?></span>
                                     </td>
                                     <td>
                                         <?php if ($r->is_websocket) { ?>
@@ -55,7 +55,7 @@
                                                 <i class="bi bi-shield-check me-1"></i>Valid
                                             </span>
                                             <?php if ($r->acme_valid_until) { ?>
-                                                <br><small class="text-muted">Until: <?php echo htmlspecialchars($r->acme_valid_until); ?></small>
+                                                <br><small class="text-muted">Until: <?php echo $r->acme_valid_until; ?></small>
                                             <?php } ?>
                                         <?php } else { ?>
                                             <span class="badge bg-danger">
@@ -73,7 +73,7 @@
                                             $username = $r->username;
                                         }
                                         ?>
-                                        <span class="badge bg-primary"><?php echo htmlspecialchars($username); ?></span>
+                                        <span class="badge bg-primary"><?php echo $username; ?></span>
                                     </td>
                                     <td class="text-end">
                                         <div class="btn-group">

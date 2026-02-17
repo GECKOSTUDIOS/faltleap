@@ -34,7 +34,7 @@
                                        class="form-control"
                                        id="username"
                                        name="username"
-                                       value="<?php echo htmlspecialchars($this->data->username ?? ''); ?>"
+                                       value="<?php echo $this->data->username ?? ''; ?>"
                                        placeholder="Enter username"
                                        required>
                             </div>
@@ -51,7 +51,7 @@
                                        class="form-control"
                                        id="email"
                                        name="email"
-                                       value="<?php echo htmlspecialchars($this->data->email ?? ''); ?>"
+                                       value="<?php echo $this->data->email ?? ''; ?>"
                                        placeholder="user@example.com"
                                        required>
                             </div>

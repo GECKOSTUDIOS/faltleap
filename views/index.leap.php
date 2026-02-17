@@ -32,7 +32,7 @@
       <div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
         <div class="d-flex align-items-center">
           <div class="d-block">
-            <h2 class="h5 mb-3">Hello, <?php echo $_SESSION['auth']['username'] ?? 'User'; ?></h2>
+            <h2 class="h5 mb-3">Hello, <?php echo $this->e($_SESSION['auth']['username'] ?? 'User'); ?></h2>
             <a href="/logout" class="btn btn-secondary btn-sm d-inline-flex align-items-center">
               <i class="bi bi-box-arrow-right me-1"></i> Logout
             </a>
@@ -110,7 +110,7 @@
                     <i class="bi bi-person-circle text-white"></i>
                   </div>
                   <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                    <span class="mb-0 font-small fw-bold text-gray-900"><?php echo $_SESSION['auth']['username'] ?? 'User'; ?></span>
+                    <span class="mb-0 font-small fw-bold text-gray-900"><?php echo $this->e($_SESSION['auth']['username'] ?? 'User'); ?></span>
                   </div>
                 </div>
               </a>

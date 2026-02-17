@@ -34,7 +34,7 @@
                                        class="form-control"
                                        id="server_name"
                                        name="server_name"
-                                       value="<?php echo htmlspecialchars($this->data->server_name ?? ''); ?>"
+                                       value="<?php echo $this->data->server_name ?? ''; ?>"
                                        placeholder="example.com"
                                        required>
                             </div>
@@ -51,7 +51,7 @@
                                        class="form-control"
                                        id="target_address"
                                        name="target_address"
-                                       value="<?php echo htmlspecialchars($this->data->target_address ?? ''); ?>"
+                                       value="<?php echo $this->data->target_address ?? ''; ?>"
                                        placeholder="192.168.1.100"
                                        required>
                             </div>
@@ -67,7 +67,7 @@
                                        class="form-control"
                                        id="target_port"
                                        name="target_port"
-                                       value="<?php echo htmlspecialchars($this->data->target_port ?? ''); ?>"
+                                       value="<?php echo $this->data->target_port ?? ''; ?>"
                                        placeholder="8080"
                                        required>
                             </div>
@@ -97,7 +97,7 @@
                                       id="custom_configs"
                                       name="custom_configs"
                                       rows="5"
-                                      placeholder="Add custom nginx configuration here..."><?php echo htmlspecialchars($this->data->custom_configs ?? ''); ?></textarea>
+                                      placeholder="Add custom nginx configuration here..."><?php echo $this->data->custom_configs ?? ''; ?></textarea>
                             <small class="form-text text-muted">Optional custom nginx directives for advanced configuration.</small>
                         </div>
 

@@ -89,10 +89,20 @@ $user->save();
 
 - Templates in `/views/` with `.leap.php` extension
 - Master layout: `/views/index.leap.php` with `{{content}}` placeholder
-- Controllers use `$this->view->render("viewname", $data)` for layout wrapping
+- Controllers use `$this->view->render("viewname")` for layout wrapping
 - Or `$this->view->single("viewname")` for standalone views
 - Flash messages via `$this->view->flash("message")` rendered with `{{flash}}` placeholder
-- Data passed to views as object properties: `$data->title` accessible as `$title` in template
+
+**Auto-escaping (XSS protection):**
+
+- `$this->view->data = $value` — sets data; in templates, `$this->data->prop` auto-escapes strings via `htmlspecialchars()`
+- `$this->view->rawData = $value` — sets raw data; in templates, `$this->rawData->prop` returns unescaped HTML
+- `$this->e($value)` — explicit escape helper for non-data values (e.g. `$_SESSION` vars)
+- Iteration auto-wraps each item: `foreach ($this->data as $r) { echo $r->name; }` is safe
+- Non-string values (int, bool, null) pass through unchanged
+- `empty($this->data)` works correctly for null/empty arrays
+- `$this->data->prop ?? 'default'` works via `__isset` support
+- `renderJson()` uses raw data internally (no escaping artifacts)
 
 ### Frontend/UI Requirements
 

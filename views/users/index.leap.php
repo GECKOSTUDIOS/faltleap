@@ -33,11 +33,11 @@
                                             <div class="avatar-sm bg-secondary rounded-circle me-2 d-flex align-items-center justify-content-center">
                                                 <i class="bi bi-person text-white"></i>
                                             </div>
-                                            <span class="fw-normal"><?php echo htmlspecialchars($r->username); ?></span>
+                                            <span class="fw-normal"><?php echo $r->username; ?></span>
                                         </div>
                                     </td>
                                     <td class="fw-normal">
-                                        <?php echo htmlspecialchars($r->email ?? 'N/A'); ?>
+                                        <?php echo $r->email ?? 'N/A'; ?>
                                     </td>
                                     <td class="text-end">
                                         <div class="btn-group">

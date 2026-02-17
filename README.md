@@ -75,6 +75,7 @@ Set `APP_DEBUG=false` in production. Errors will log to `storage/logs/error.log`
 | **Database Support** | PostgreSQL only | MySQL, Postgres, SQLite | Any with Doctrine |
 | **ORM** | Active Record | Eloquent (Active Record) | Doctrine (Data Mapper) |
 | **Template Engine** | Built-in (PHP) | Blade | Twig |
+| **Auto-Escaping** | ✅ Safe by default | ✅ Blade `{{ }}` | ✅ Twig `{{ }}` |
 | **Zero Config Setup** | ✅ Yes | ❌ No | ❌ No |
 | **Error Handling** | ✅ Debug page + console | ✅ Ignition | ✅ Profiler |
 | **Code You Can Read** | ✅ In one afternoon | ❌ Months | ❌ Never |
@@ -521,7 +522,7 @@ class HelloController extends LeapController {
 
 ```html
 <div class="container mt-5">
-    <h1>Hello, <?= htmlspecialchars($name) ?>!</h1>
+    <h1>Hello, <?= $this->data->name ?>!</h1>
 </div>
 ```
 
@@ -538,7 +539,8 @@ Every component is documented, typed, and readable:
 - **LeapController**: Base controller with auto-injected dependencies (db, request, session, view)
 - **LeapModel**: Active Record ORM with fluent query builder (~840 lines including joins, aggregates, grouping)
 - **LeapQueryBuilder**: Join builder with auto-hydration and complex query support (~350 lines)
-- **LeapView**: Template engine with layout inheritance and flash messages
+- **LeapView**: Template engine with layout inheritance, flash messages, and auto-escaping
+- **LeapSafeData**: Auto-escaping wrapper for XSS protection — strings are escaped on access, non-strings pass through
 - **LeapDB**: PostgreSQL PDO wrapper with schema support and prepared statements
 - **LeapRequest**: HTTP request abstraction with type-safe helpers
 - **LeapSession**: Session management with flash message support
@@ -548,12 +550,13 @@ Every component is documented, typed, and readable:
 - **LeapNotFoundException**: 404 exception for missing routes, controllers, views
 - **LeapSyntaxException**: Syntax error exception with source file/line context
 - **LeapWebSocketServer**: Built-in WebSocket server for real-time features
+- **LeapSafeData**: Auto-escaping data wrapper for XSS protection (~75 lines)
 - **LeapAutoloader**: PSR-4 compliant autoloader (~145 lines)
 - **LeapMiddleware**: Abstract middleware base class with dependency injection
 - **LeapMiddlewareStack**: Middleware pipeline executor (~115 lines)
 - **LeapEnv**: Zero-dependency .env file parser (~107 lines)
 
-**Total framework size: ~3,000 lines across 19 files.** You can read it all in one sitting.
+**Total framework size: ~3,000 lines across 20 files.** You can read it all in one sitting.
 
 ### Request Lifecycle
 
@@ -660,7 +663,7 @@ When you could understand your entire stack. When "upgrading" didn't mean 3 days
 /conf/             Configuration files
   ├── db.config.php         Database connection
   └── router.config.php     Route definitions
-/lib/              Framework core (19 classes, zero dependencies)
+/lib/              Framework core (20 classes, zero dependencies)
 /models/           Generated model classes
 /public/           Web root (index.php entry point)
 /storage/          Runtime data (gitignored)
@@ -765,10 +768,10 @@ $ git clone faltleap myapp
 $ du -sh myapp/lib
 124K    myapp/lib
 $ find myapp/lib -name "*.php" | wc -l
-19 files
+20 files
 ```
 
-**274MB vs 124KB. 32,847 files vs 19 files.**
+**274MB vs 124KB. 32,847 files vs 20 files.**
 
 And you know what? The Falt Leap version will still be working in 5 years. No breaking changes. No deprecated APIs. No surprise rewrites.
 
@@ -860,4 +863,4 @@ And then build something great.
 
 **Built with conviction. Powered by PostgreSQL. Zero dependencies, zero regrets.**
 
-**Version 0.3** • ~3,000 lines • 19 files • ∞ possibilities
+**Version 0.3** • ~3,000 lines • 20 files • ∞ possibilities
