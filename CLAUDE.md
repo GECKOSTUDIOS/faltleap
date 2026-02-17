@@ -39,13 +39,34 @@ Routes defined in `/conf/router.config.php` as simple array:
 
 ```php
 $routes = [
+    // Simple string — matches ALL HTTP methods
     "/" => "HomeController@index",
-    "/users/edit/{id}" => "UsersController@edit",
-    "/login" => "AuthController@login"
+
+    // Array with middleware — matches ALL HTTP methods
+    "/users" => ["UsersController@index", "auth"],
+
+    // HTTP method-nested — different controller@method per verb
+    "/login" => [
+        "GET"  => "AuthController@showLogin",
+        "POST" => "AuthController@login",
+    ],
+
+    // Methods can use middleware too
+    "/users/edit/{id}" => [
+        "GET"  => ["UsersController@edit", "auth"],
+        "POST" => ["UsersController@update", "auth"],
+    ],
+
+    // Single method restriction (POST-only)
+    "/users/delete/{id}" => [
+        "POST" => ["UsersController@delete", "auth"],
+    ],
 ];
 ```
 
 Dynamic parameters like `{id}` are extracted and passed to controller methods as arguments.
+
+**HTTP method routing**: A route definition is "method-nested" if its value is an array whose keys include any of `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, `HEAD`. When a URL matches but the HTTP method doesn't match any nested key, the router returns **405 Method Not Allowed** with an `Allow` header listing the valid methods. Non-nested routes (string or `[action, ...middleware]`) continue to match all HTTP methods.
 
 ### Database & Models
 

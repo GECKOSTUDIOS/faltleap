@@ -608,6 +608,8 @@ HTML;
         }
         if ($e instanceof LeapNotFoundException) {
             $statusText = 'Page Not Found';
+        } elseif ($e instanceof LeapHttpException && $e->statusCode === 405) {
+            $statusText = 'Method Not Allowed';
         }
 
         if (!headers_sent()) {

@@ -7,15 +7,19 @@ namespace FaltLeap;
 // Define a LeapRouter to handle route matching and controller/action extraction
 class LeapRouter
 {
+    private const HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'];
+
     /**
      * Matches the current URI against a list of routes and returns the corresponding controller/action.
      * Supports both static and dynamic (parameterized) routes.
      * Supports middleware definitions in routes.
+     * Supports HTTP method-nested route definitions.
      *
      * @param array $routes Array of route patterns mapped to controller actions or arrays with middleware
      *                      Examples:
      *                      '/user' => 'UserController@index'
      *                      '/admin' => ['AdminController@index', 'auth', 'admin']
+     *                      '/login' => ['GET' => 'AuthController@showLogin', 'POST' => 'AuthController@login']
      * @return array|null The matched route information with controller, method, params, and middleware
      */
     public function getRoute(array $routes)
@@ -32,17 +36,12 @@ class LeapRouter
 
         // Iterate through each route candidate
         foreach ($routes as $routecandidate => $routeDefinition) {
-            // Parse route definition (could be string or array with middleware)
-            $parsedRoute = $this->parseRouteDefinition($routeDefinition);
-            $controllerAction = $parsedRoute['action'];
-            $middleware = $parsedRoute['middleware'];
-
-            // Extract controller and method from the action string
-            $extractedControllerAction = $this->extractControllerAction($controllerAction);
-            $extractedControllerAction['middleware'] = $middleware;
-
             // Check for an exact match
             if ($routecandidate == $uri) {
+                $routeDefinition = $this->resolveMethodNested($routeDefinition);
+                $parsedRoute = $this->parseRouteDefinition($routeDefinition);
+                $extractedControllerAction = $this->extractControllerAction($parsedRoute['action']);
+                $extractedControllerAction['middleware'] = $parsedRoute['middleware'];
                 return $extractedControllerAction;
             }
 
@@ -55,6 +54,13 @@ class LeapRouter
                 $has_match = preg_match_all("/$routecandidate_regex/is", $uri, $out);
 
                 if ($has_match) {
+                    $routeDefinition = $this->resolveMethodNested($routeDefinition);
+                    $parsedRoute = $this->parseRouteDefinition($routeDefinition);
+                    $controllerAction = $parsedRoute['action'];
+
+                    $extractedControllerAction = $this->extractControllerAction($controllerAction);
+                    $extractedControllerAction['middleware'] = $parsedRoute['middleware'];
+
                     // Replace route parameters in the controller action string with matched values
                     foreach ($out as $key => $value) {
                         if (!is_numeric($key)) {
@@ -70,6 +76,56 @@ class LeapRouter
 
         // If no route matches, return null
         return null;
+    }
+
+    /**
+     * Resolve method-nested route definitions.
+     * If the definition maps HTTP methods to sub-definitions, look up the current request method.
+     * Throws 405 if the URL matches but the HTTP method doesn't.
+     *
+     * @param string|array $routeDefinition The route definition to resolve
+     * @return string|array The resolved sub-definition for the current HTTP method
+     */
+    private function resolveMethodNested(string|array $routeDefinition): string|array
+    {
+        if (!$this->isMethodNested($routeDefinition)) {
+            return $routeDefinition;
+        }
+
+        $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        if (!isset($routeDefinition[$method])) {
+            $this->handleMethodNotAllowed($routeDefinition);
+        }
+        return $routeDefinition[$method];
+    }
+
+    /**
+     * Check if a route definition uses HTTP method nesting.
+     * A definition is method-nested if it's an array with at least one HTTP method key.
+     */
+    private function isMethodNested(mixed $definition): bool
+    {
+        if (!is_array($definition)) {
+            return false;
+        }
+        foreach (array_keys($definition) as $key) {
+            if (in_array($key, self::HTTP_METHODS, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Handle 405 Method Not Allowed by setting the Allow header and throwing an exception.
+     */
+    private function handleMethodNotAllowed(array $definition): void
+    {
+        $allowedMethods = array_values(array_intersect(array_keys($definition), self::HTTP_METHODS));
+        if (!headers_sent()) {
+            header('Allow: ' . implode(', ', $allowedMethods));
+        }
+        throw new LeapHttpException('Method Not Allowed', 405);
     }
 
     /**
