@@ -17,6 +17,27 @@ Falt Leap is an opinionated MVC framework that throws out the complexity of mode
 
 ---
 
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Feature Comparison](#feature-comparison)
+- [What's Different? (Show, Don't Tell)](#whats-different-show-dont-tell)
+- [Why Falt Leap?](#why-falt-leap)
+- [What's New in Version 0.3?](#whats-new-in-version-03)
+- [What Makes This Opinionated?](#what-makes-this-opinionated)
+- [Architecture](#architecture)
+- [Model Generation](#model-generation)
+- [Who Is This For?](#who-is-this-for)
+- [Project Structure](#project-structure)
+- [Philosophy](#philosophy)
+- [Documentation](#documentation)
+- [Real Talk: Why Another Framework?](#real-talk-why-another-framework)
+- [Performance](#performance)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
 ## Quick Start
 
 The fastest way from zero to running app:
