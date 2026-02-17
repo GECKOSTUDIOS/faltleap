@@ -3,7 +3,7 @@
 ![PHP 8+](https://img.shields.io/badge/PHP-8%2B-777BB4?style=flat-square&logo=php)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Only-336791?style=flat-square&logo=postgresql)
 ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-success?style=flat-square)
-![Lines of Code](https://img.shields.io/badge/Lines_of_Code-3,028-blue?style=flat-square)
+![Lines of Code](https://img.shields.io/badge/Lines_of_Code-3,201-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-BSD-green?style=flat-square)
 
 **A radically simple, zero-dependency PHP framework for PostgreSQL purists.**
@@ -12,7 +12,7 @@
 
 Falt Leap is an opinionated MVC framework that throws out the complexity of modern PHP development and gets back to basics. No Composer. No bloated dependencies. No framework-imposed abstractions between you and your database. Just clean, fast PHP that embraces PostgreSQL's power.
 
-**Version 0.3** introduces a full error handling system with a rich debug page, interactive console, and production-safe error screens — on top of v0.2's query builder, middleware, and autoloading. All in **~3,000 lines of core code**.
+**Version 0.3** introduces a full error handling system with a rich debug page, interactive console, and production-safe error screens — on top of v0.2's query builder, middleware, and autoloading. All in **~3,200 lines of core code**.
 
 ---
 
@@ -85,7 +85,7 @@ Set `APP_DEBUG=false` in production. Errors will log to `storage/logs/error.log`
 
 | Feature | Falt Leap | Laravel 11 | Symfony 7 |
 |---------|-----------|------------|-----------|
-| **Lines of Code** | ~3,000 | ~500,000+ | ~800,000+ |
+| **Lines of Code** | ~3,200 | ~500,000+ | ~800,000+ |
 | **Dependencies** | 0 | 30+ direct, 100+ total | 50+ direct, 200+ total |
 | **Vendor Folder Size** | 0 bytes | ~274 MB | ~350 MB |
 | **Fresh Install Time** | < 1 second | 2-5 minutes | 3-7 minutes |
@@ -253,7 +253,7 @@ So what did frameworks do? They built **thousands of lines of code** to compensa
 | Enum packages (`spatie/enum`, etc.) | PHP had no enum support | Native `enum` (PHP 8.1) |
 | Null-handling helpers | Null checks were verbose and error-prone | Nullsafe operator `?->`, null coalescing `??` and `??=` |
 | Template escaping helpers | Easy to forget `htmlspecialchars()` | We solve this at the architecture level with auto-escaping data wrappers |
-| Macro/mixin systems | Extending framework classes was rigid | When your framework is 3,000 lines, you just change the code |
+| Macro/mixin systems | Extending framework classes was rigid | When your framework is 3,200 lines, you just change the code |
 
 **Falt Leap doesn't carry this baggage.** It was written from scratch for PHP 8+ and leans on the language itself instead of reinventing it.
 
@@ -307,7 +307,7 @@ You've spent your career dealing with:
 
 ### Zero Dependencies, Zero Compromises
 
-Modern PHP frameworks come with hundreds of dependencies. Falt Leap has **exactly zero**. Every line of code is in this repository. The entire framework is **~3,000 lines**. You can read and understand it in an afternoon.
+Modern PHP frameworks come with hundreds of dependencies. Falt Leap has **exactly zero**. Every line of code is in this repository. The entire framework is **~3,200 lines**. You can read and understand it in an afternoon.
 
 ```bash
 # No composer install
@@ -523,7 +523,7 @@ Every framework file uses `declare(strict_types=1)`. Because it's 2025 and we sh
 
 We're not anti-dependency. We're anti-complexity. Every external package is a potential security risk, maintenance burden, and breaking change waiting to happen. Falt Leap is entirely self-contained.
 
-**The entire framework is ~3,000 lines.** That's less than a single Laravel controller in some projects.
+**The entire framework is ~3,200 lines.** That's less than a single Laravel controller in some projects.
 
 ### 2. **PostgreSQL Only**
 
@@ -605,7 +605,7 @@ Done. No service providers to register. No middleware to configure. No build pro
 
 ## Architecture
 
-### Core Components (All in `/lib/` - **~3,000 lines total**)
+### Core Components (All in `/lib/` - **~3,200 lines total**)
 
 Every component is documented, typed, and readable:
 
@@ -631,7 +631,7 @@ Every component is documented, typed, and readable:
 - **LeapMiddlewareStack**: Middleware pipeline executor (~115 lines)
 - **LeapEnv**: Zero-dependency .env file parser (~107 lines)
 
-**Total framework size: ~3,000 lines across 20 files.** You can read it all in one sitting.
+**Total framework size: ~3,200 lines across 20 files.** You can read it all in one sitting.
 
 ### Request Lifecycle
 
@@ -706,7 +706,7 @@ class Users extends LeapModel {
 
 - ✅ **Value simplicity over abstraction** - You're tired of 10 layers between you and the database
 - ✅ **Trust PostgreSQL more than ORMs** - You know PostgreSQL can do things Laravel's query builder can't
-- ✅ **Want to understand your framework** - All ~3,000 lines of it
+- ✅ **Want to understand your framework** - All ~3,200 lines of it
 - ✅ **Prefer convention over configuration** - Routes are arrays, not YAML manifests
 - ✅ **Think modern frameworks have gotten ridiculous** - When did a TODO app need 400 dependencies?
 - ✅ **Build real applications** - CRUD apps, dashboards, internal tools, SaaS backends, APIs
@@ -769,7 +769,7 @@ Modern frameworks give you everything. Falt Leap gives you **what you actually n
 - **Autoloading** - PSR-4 compliant, zero-config
 - **.env support** - Configuration without packages
 
-**Total: ~3,000 lines.** Including a full error handling system with interactive debug console.
+**Total: ~3,200 lines.** Including a full error handling system with interactive debug console.
 
 Everything else? That's your code to write, not framework bloat to maintain. Need queues? Write a queue. Need emails? Send emails. You're a developer, not a framework configurator.
 
@@ -841,12 +841,12 @@ $ find myapp/vendor -name "*.php" | wc -l
 ```bash
 $ git clone faltleap myapp
 $ du -sh myapp/lib
-124K    myapp/lib
+152K    myapp/lib
 $ find myapp/lib -name "*.php" | wc -l
 20 files
 ```
 
-**274MB vs 124KB. 32,847 files vs 20 files.**
+**274MB vs 152KB. 32,847 files vs 20 files.**
 
 And you know what? The Falt Leap version will still be working in 5 years. No breaking changes. No deprecated APIs. No surprise rewrites.
 
@@ -938,4 +938,4 @@ And then build something great.
 
 **Built with conviction. Powered by PostgreSQL. Zero dependencies, zero regrets.**
 
-**Version 0.3** • ~3,000 lines • 20 files • ∞ possibilities
+**Version 0.3** • ~3,200 lines • 20 files • ∞ possibilities
