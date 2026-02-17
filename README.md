@@ -8,8 +8,7 @@
 
 **A radically simple, zero-dependency PHP framework for PostgreSQL purists.**
 
-> *"Finally, a framework that doesn't fight me. I can read the entire codebase in an afternoon and actually understand what's happening. No magic. No surprises. Just clean code that does what it says."*
-> — Every burned-out senior developer who finds this
+> *Your framework has more dependencies than your app has users.*
 
 Falt Leap is an opinionated MVC framework that throws out the complexity of modern PHP development and gets back to basics. No Composer. No bloated dependencies. No framework-imposed abstractions between you and your database. Just clean, fast PHP that embraces PostgreSQL's power.
 
