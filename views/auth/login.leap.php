@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - FlatLeap</title>
+  <title>Login - FaltLeap</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -82,7 +82,7 @@
 <body>
   <div class="login-container">
     <div class="login-card">
-      <h5 class="mb-3">Welcome to <span style="color:#ff6600">FlatLeap</span></h5>
+      <h5 class="mb-3">Welcome to <span style="color:#ff6600">FaltLeap</span></h5>
       {{flash}}
       <form class="form-signin" method="post">
         <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
@@ -93,7 +93,7 @@
   </div>
 
   <footer>
-    <img src="img/faltleap.png" alt="FlatLeap Logo" />
+    <img src="img/faltleap.png" alt="FaltLeap Logo" />
     <p class="mt-2">Zero dependencies &amp; zero compromises</p>
   </footer>
 </body>

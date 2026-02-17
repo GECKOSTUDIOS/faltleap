@@ -49,13 +49,11 @@ class LeapView
 
     public function single(string $view)
     {
-        $viewcontent = "";
         $viewPath = $this->viewsPath . '/' . $view . '.leap.php';
-        if (file_exists($viewPath)) {
-            $viewcontent = $this->load_template($viewPath);
-        } else {
-            $viewcontent = "view not found:" . $view . ".leap.php (looked in: " . $viewPath . ")";
+        if (!file_exists($viewPath)) {
+            throw new LeapNotFoundException("View not found: {$view}.leap.php (looked in: {$viewPath})");
         }
+        $viewcontent = $this->load_template($viewPath);
         $viewcontent = $this->replaceTags($viewcontent);
         echo $viewcontent;
     }
@@ -98,11 +96,10 @@ class LeapView
         $base = $this->load_template($basePath);
         if ($subview) {
             $subviewPath = $this->viewsPath . '/' . $subview . '.leap.php';
-            if (file_exists($subviewPath)) {
-                $subview = $this->load_template($subviewPath);
-            } else {
-                $subview = "view not found:" . $subview . ".leap.php (looked in: " . $subviewPath . ")";
+            if (!file_exists($subviewPath)) {
+                throw new LeapNotFoundException("View not found: {$subview}.leap.php (looked in: {$subviewPath})");
             }
+            $subview = $this->load_template($subviewPath);
         }
         $base = str_replace("{{content}}", $subview, $base);
         $base = $this->replaceTags($base);
@@ -123,8 +120,19 @@ class LeapView
 
     private function load_template($template)
     {
+        // Lint check in debug mode
+        $errorHandler = LeapErrorHandler::getInstance();
+        if ($errorHandler->isDebug()) {
+            $errorHandler->lintCheck($template);
+        }
+
         ob_start();
-        require $template;
+        try {
+            require $template;
+        } catch (\Throwable $e) {
+            ob_end_clean();
+            throw $e;
+        }
         $content = ob_get_contents();
         ob_end_clean();
         return $content;

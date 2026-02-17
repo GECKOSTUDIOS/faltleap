@@ -18,19 +18,34 @@ class LeapEngine
 
     public function start($routes = array())
     {
+        // Intercept debug console route
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+        if ($requestUri === '/_leap/debug/console' && LeapErrorHandler::getInstance()->isDebug()) {
+            LeapDebugConsole::handle();
+            return;
+        }
+
         $route = new LeapRouter();
         $currentRoute = $route->getRoute($routes);
         //laod the file
         if (!$currentRoute) {
-            echo "Route not found";
-            return;
+            throw new LeapNotFoundException("Route not found: " . ($_SERVER['REQUEST_URI'] ?? ''));
         }
         if (!array_key_exists("file", $currentRoute)) {
-            echo "Controller (file) not found";
-            return;
+            throw new LeapNotFoundException("Controller (file) not found for route: " . ($_SERVER['REQUEST_URI'] ?? ''));
         }
         // No need to manually require files anymore - autoloader handles it
         $fullClassName = "App\\Controllers\\" . $currentRoute['class'];
+
+        // Lint check controller file in debug mode
+        $errorHandler = LeapErrorHandler::getInstance();
+        if ($errorHandler->isDebug()) {
+            $controllerFile = dirname(__DIR__) . '/app/' . $currentRoute['file'];
+            if (file_exists($controllerFile)) {
+                $errorHandler->lintCheck($controllerFile);
+            }
+        }
+
         if (class_exists($fullClassName)) {
             $instance = new $fullClassName();
             if (method_exists($instance, $currentRoute['method'])) {
@@ -53,12 +68,10 @@ class LeapEngine
                 $result = $middlewareStack->execute($middleware, $finalAction);
                 // Use $result as needed
             } else {
-                // Handle method not found
-                echo "Method not found";
+                throw new LeapNotFoundException("Method '{$currentRoute['method']}' not found in controller '{$fullClassName}'");
             }
         } else {
-            // Handle class not found
-            echo "Class not found";
+            throw new LeapNotFoundException("Controller class '{$fullClassName}' not found");
         }
     }
 

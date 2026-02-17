@@ -67,21 +67,9 @@ class LeapDB
 
     private function connect()
     {
-        //postgres!
-        try {
-            $connectionstring = 'pgsql:host=' . $this->host . ';dbname=' . $this->database;
-            $this->connection = new PDO($connectionstring, $this->username, $this->password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-            if ($this->connection) {
-                $this->connection->exec('SET search_path TO ' . $this->schema);
-                return true;
-            }
-        } catch (PDOException $e) {
-            die($e->getMessage());
-        } finally {
-        }
-        if ($this->connection->connect_error) {
-            die("Connection failed: " . $this->connection->connect_error);
-        }
+        $connectionstring = 'pgsql:host=' . $this->host . ';dbname=' . $this->database;
+        $this->connection = new PDO($connectionstring, $this->username, $this->password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $this->connection->exec('SET search_path TO ' . $this->schema);
     }
 
     public function query($sql, $params = [])

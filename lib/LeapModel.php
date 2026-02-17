@@ -445,7 +445,7 @@ class LeapModel
             }
 
             if (count($insert_data) == 0) {
-                throw new Exception("Couldn't find data to insert");
+                throw new \RuntimeException("Couldn't find data to insert");
             }
 
             // SQL-Statement aufbauen
