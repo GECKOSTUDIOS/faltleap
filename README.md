@@ -22,6 +22,7 @@ Falt Leap is an opinionated MVC framework that throws out the complexity of mode
 - [Quick Start](#quick-start)
 - [Feature Comparison](#feature-comparison)
 - [What's Different? (Show, Don't Tell)](#whats-different-show-dont-tell)
+- [Built for Modern PHP, Not Around Legacy PHP](#built-for-modern-php-not-around-legacy-php)
 - [Why Falt Leap?](#why-falt-leap)
 - [What's New in Version 0.3?](#whats-new-in-version-03)
 - [What Makes This Opinionated?](#what-makes-this-opinionated)
@@ -234,6 +235,60 @@ APP_DEBUG=true
 
 # Done.
 ```
+
+---
+
+## Built for Modern PHP, Not Around Legacy PHP
+
+Most popular frameworks were born in the PHP 5 era. They carry **years of abstractions that exist to work around language limitations that no longer exist**. Laravel shipped its first version in 2011. Symfony in 2005. The PHP they were designed for didn't have strict types, union types, named arguments, enums, fibers, or even a sane error model.
+
+So what did frameworks do? They built **thousands of lines of code** to compensate:
+
+| What frameworks built | Why it existed | What PHP 8+ has natively |
+|---|---|---|
+| `Illuminate\Support\Str` (600+ lines) | PHP lacked basic string helpers | `str_contains()`, `str_starts_with()`, `str_ends_with()` |
+| Doctrine DBAL abstraction layer | PDO was clunky and error-prone | PDO with `ERRMODE_EXCEPTION`, named params, proper fetch modes |
+| Service container with reflection | No way to express dependencies clearly | Typed properties, union types, constructor promotion |
+| Collection classes (1,500+ lines) | Arrays were painful to work with | Generators, `array_is_list()`, spread operator, arrow functions |
+| Validation layers and type casting | No type safety at the language level | `declare(strict_types=1)`, union types, `mixed`, typed properties |
+| Enum packages (`spatie/enum`, etc.) | PHP had no enum support | Native `enum` (PHP 8.1) |
+| Null-handling helpers | Null checks were verbose and error-prone | Nullsafe operator `?->`, null coalescing `??` and `??=` |
+| Template escaping helpers | Easy to forget `htmlspecialchars()` | We solve this at the architecture level with auto-escaping data wrappers |
+| Macro/mixin systems | Extending framework classes was rigid | When your framework is 3,000 lines, you just change the code |
+
+**Falt Leap doesn't carry this baggage.** It was written from scratch for PHP 8+ and leans on the language itself instead of reinventing it.
+
+### What this looks like in practice
+
+**Every file** in the framework uses `declare(strict_types=1)`. Types are enforced by PHP itself, not by a validation layer on top.
+
+**PDO does the heavy lifting.** We don't wrap PDO in an abstraction layer that pretends databases are interchangeable. We use PDO's exception mode, named parameters, and prepared statements directly — because modern PDO is already good:
+
+```php
+// This is the entire query method. No DBAL. No query log. No event dispatcher.
+$stmt = $this->connection->prepare($sql);
+$stmt->execute($params);
+return $stmt->fetchAll(PDO::FETCH_ASSOC);
+```
+
+**Dependency injection is just typed constructors.** No service container. No binding configuration. No `$this->app->make()`. PHP's type system tells us what a class needs:
+
+```php
+class UsersController extends LeapController {
+    // db, request, session, view — injected automatically via typed properties
+    // No container config. No service provider. No binding.
+}
+```
+
+**Auto-escaping uses PHP's own magic methods** — not a custom template syntax with a compiler:
+
+```php
+// LeapSafeData wraps your data and escapes strings on property access
+// No Blade compiler. No Twig lexer. Just __get() and htmlspecialchars().
+<?= $this->data->username ?>  <!-- escaped automatically -->
+```
+
+The result: features that take thousands of lines in other frameworks take **dozens** in Falt Leap — because we let PHP 8 do what PHP 8 was designed to do.
 
 ---
 
