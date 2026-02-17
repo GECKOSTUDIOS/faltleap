@@ -42,7 +42,7 @@ class AuthController extends LeapController
         if ($user->username == $model->username && sha1($user->password) == $model->password) {
             $this->session->set("auth", ['idusers' => $model->idusers, 'username' => $user->username]);
             //$_SESSION['user'] = $user;
-            return $this->redirect("/");
+            return $this->redirect("/dashboard");
         }
 
         $this->view->flash("Invalid Credentials");

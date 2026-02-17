@@ -2,8 +2,8 @@
 
 // Define the routes
 $routes = [
-  //"/" => "HomeController@index",
-  "/" => ["ReverseProxyController@index", "auth"],
+  "/" => "HomeController@welcome",
+  "/dashboard" => ["HomeController@index", "auth"],
   "/about" => "AboutController@index",
   "/manage" => ["ReverseProxyController@index", "auth"],
   "/manage/edit" => ["ReverseProxyController@edit", "auth"],

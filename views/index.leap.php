@@ -51,7 +51,7 @@
       <!-- Sidebar Menu -->
       <ul class="nav flex-column pt-3 pt-md-0">
         <li class="nav-item">
-          <a href="/" class="nav-link d-flex align-items-center">
+          <a href="/dashboard" class="nav-link d-flex align-items-center">
             <span class="sidebar-icon">
               <i class="bi bi-speedometer2"></i>
             </span>

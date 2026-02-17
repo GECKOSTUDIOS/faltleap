@@ -1,14 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
+
+use FaltLeap\LeapController;
 
 class HomeController extends LeapController
 {
+    public function welcome()
+    {
+        $this->view->single('welcome');
+    }
+
     public function index()
     {
-        if (!$this->session->get('auth')) {
-            $this->redirect('/login');
-        }
         $this->view->render('home/index');
     }
 }
