@@ -48,6 +48,20 @@ class HomeController extends LeapController
         "LLMs have read every JS framework ever written. They're the real victims here.",
         "You need an AI agent just to upgrade your dependencies without breaking prod.",
         "AI can generate a full-stack app in seconds. Debugging the toolchain still takes a week.",
+
+        // FaltLeap: too simple for AI to be necessary
+        "20 files. You can read them all yourself. No AI required.",
+        "Other frameworks need AI to explain them. Ours fits on a napkin.",
+        "You don't need Copilot when your entire framework is shorter than its context window.",
+        "AI is great for navigating complexity. FaltLeap just doesn't have any.",
+        "They need AI to manage dependencies. We need AI to... nothing. We're good.",
+        "Your coworker needs ChatGPT to understand their codebase. You just need 20 minutes.",
+        "FaltLeap: the framework an intern can understand without asking a chatbot.",
+        "No AI was needed to build this. But one was needed to build your Webpack config.",
+        "When your framework is 3,200 lines, the AI in your head is enough.",
+        "Everyone's using AI to write glue code. We just don't have glue code.",
+        "LLMs are great at summarizing complexity. We skipped the complexity part.",
+        "The best use of AI is not needing it. Welcome to FaltLeap.",
     ];
 
     public function welcome()
