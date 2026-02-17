@@ -247,27 +247,7 @@
         <span>Falt Leap</span> Framework
       </h1>
 
-      <p class="tagline fade-in fade-in-delay-2" id="tagline"></p>
-
-      <script>
-        (function() {
-          var taglines = [
-            "PHP grew up. Your prejudice didn\u2019t.",
-            "While you were configuring Webpack, we shipped.",
-            "PHP 8 has match expressions. Node has 47 left-pad alternatives.",
-            "No transpiling. No bundling. No existential crisis about which runtime to use.",
-            "PHP doesn\u2019t need a package to check if a number is odd.",
-            "Strict types, named arguments, fibers \u2014 but sure, tell me again how PHP is dead.",
-            "Your Node app needs 900 packages to start. Ours needs php index.php.",
-            "PHP evolved. JavaScript just added more build steps.",
-            "Built with the language everyone loves to hate and secretly deploys.",
-            "No node_modules. No tsconfig. No babel. No drama.",
-            "PHP: powering 80% of the web while you argue about frameworks on Twitter.",
-            "The mass grave of JS frameworks called. PHP sends its regards."
-          ];
-          document.getElementById("tagline").textContent = taglines[Math.floor(Math.random() * taglines.length)];
-        })();
-      </script>
+      <p class="tagline fade-in fade-in-delay-2"><?php echo $this->data->tagline; ?></p>
 
       <div class="stats-row fade-in fade-in-delay-3">
         <div class="stat-item">

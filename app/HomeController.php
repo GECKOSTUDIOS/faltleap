@@ -8,8 +8,53 @@ use FaltLeap\LeapController;
 
 class HomeController extends LeapController
 {
+    private const TAGLINES = [
+        // PHP vs the world
+        "PHP grew up. Your prejudice didn't.",
+        "While you were configuring Webpack, we shipped.",
+        "PHP 8 has match expressions. Node has 47 left-pad alternatives.",
+        "No transpiling. No bundling. No existential crisis about which runtime to use.",
+        "PHP doesn't need a package to check if a number is odd.",
+        "Strict types, named arguments, fibers — but sure, tell me again how PHP is dead.",
+        "Your Node app needs 900 packages to start. Ours needs php index.php.",
+        "PHP evolved. JavaScript just added more build steps.",
+        "Built with the language everyone loves to hate and secretly deploys.",
+        "No node_modules. No tsconfig. No babel. No drama.",
+        "PHP: powering 80% of the web while you argue about frameworks on Twitter.",
+        "The mass grave of JS frameworks called. PHP sends its regards.",
+
+        // Modern web stack roasts
+        "Your frontend build pipeline has more stages than a Saturn V rocket.",
+        "Somewhere a developer is debugging why their 12-layer abstraction can't render a list.",
+        "Your app needs Docker, Kubernetes, and three YAML files just to say Hello World.",
+        "npm install: 1,200 packages. You wrote: 40 lines of code. Sleep well.",
+        "The average Next.js project has more config files than features.",
+        "Tailwind: because writing CSS was too easy and we needed a build step for class names.",
+        "Remember when deploying meant uploading files via FTP? That guy retired happy.",
+        "Your microservices architecture has more network calls than users.",
+        "The modern web: where a blog needs a CI/CD pipeline and a container orchestrator.",
+        "Somewhere a senior dev is writing a 200-line Webpack config to import a PNG.",
+
+        // AI and the state of things
+        "You need AI to write code now because the stack got too stupid for humans.",
+        "AI doesn't hallucinate — it just learned from your npm dependency tree.",
+        "ChatGPT can scaffold your entire app. It still can't explain your Webpack config.",
+        "The fact that you need AI to navigate your own codebase says everything.",
+        "AI-generated code is fine. AI-generated code on top of 300 dependencies is a haunted house.",
+        "Copilot autocompletes your code. Nobody can autocomplete your node_modules.",
+        "We asked AI to simplify the modern web stack. It wrote PHP.",
+        "AI writes better boilerplate than humans because humans shouldn't be writing boilerplate.",
+        "The robots will take our jobs, but at least they won't need a package.json to do it.",
+        "LLMs have read every JS framework ever written. They're the real victims here.",
+        "You need an AI agent just to upgrade your dependencies without breaking prod.",
+        "AI can generate a full-stack app in seconds. Debugging the toolchain still takes a week.",
+    ];
+
     public function welcome()
     {
+        $this->view->data = (object) [
+            'tagline' => self::TAGLINES[array_rand(self::TAGLINES)],
+        ];
         $this->view->single('welcome');
     }
 
