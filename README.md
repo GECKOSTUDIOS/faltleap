@@ -3,7 +3,7 @@
 ![PHP 8+](https://img.shields.io/badge/PHP-8%2B-777BB4?style=flat-square&logo=php)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Only-336791?style=flat-square&logo=postgresql)
 ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-success?style=flat-square)
-![Lines of Code](https://img.shields.io/badge/Lines_of_Code-2,191-blue?style=flat-square)
+![Lines of Code](https://img.shields.io/badge/Lines_of_Code-3,028-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-BSD-green?style=flat-square)
 
 **A radically simple, zero-dependency PHP framework for PostgreSQL purists.**
@@ -13,33 +13,50 @@
 
 Falt Leap is an opinionated MVC framework that throws out the complexity of modern PHP development and gets back to basics. No Composer. No bloated dependencies. No framework-imposed abstractions between you and your database. Just clean, fast PHP that embraces PostgreSQL's power.
 
-**Version 0.2** introduces advanced query building, PSR-4 autoloading, middleware pipelines, and `.env` support—all while staying under **2,200 lines of core code**.
+**Version 0.3** introduces a full error handling system with a rich debug page, interactive console, and production-safe error screens — on top of v0.2's query builder, middleware, and autoloading. All in **~3,000 lines of core code**.
 
 ---
 
-## Get Started in 60 Seconds
+## Quick Start
+
+The fastest way from zero to running app:
 
 ```bash
-# Clone the repo
-git clone https://github.com/yourrepo/faltleap myapp
+git clone https://github.com/GECKOSTUDIOS/faltleap myapp
 cd myapp
-
-# Start the dev server (Docker)
 ./run.sh
-
-# OR configure manually
-echo "DB_HOST=localhost
-DB_NAME=myapp
-DB_USER=postgres
-DB_PASS=password" > .env
-
-# Generate models from your schema
-php gen.php all public
-
 # Done. Visit http://localhost:8090
 ```
 
-**No `composer install`. No `npm install`. No build step. Just code.**
+That's it. The Docker setup handles PHP, nginx, and everything else. No `composer install`. No `npm install`. No build step.
+
+### Manual Setup (without Docker)
+
+If you'd rather run it on your own PHP + nginx/Apache stack:
+
+```bash
+# 1. Clone
+git clone https://github.com/GECKOSTUDIOS/faltleap myapp
+cd myapp
+
+# 2. Create your .env
+cat > .env <<'EOF'
+DB_HOST=localhost
+DB_USERNAME=postgres
+DB_PASSWORD=yourpassword
+DB_DATABASE=yourdb
+DB_SCHEMA=public
+APP_DEBUG=true
+EOF
+
+# 3. Generate models from your existing PostgreSQL schema
+php gen.php all public
+
+# 4. Point your web server's document root to /public/
+#    (nginx: root /path/to/myapp/public; | Apache: DocumentRoot /path/to/myapp/public)
+```
+
+Set `APP_DEBUG=false` in production. Errors will log to `storage/logs/error.log` and users see a clean error page instead of stack traces.
 
 ---
 
@@ -47,7 +64,7 @@ php gen.php all public
 
 | Feature | Falt Leap | Laravel 11 | Symfony 7 |
 |---------|-----------|------------|-----------|
-| **Lines of Code** | 2,191 | ~500,000+ | ~800,000+ |
+| **Lines of Code** | ~3,000 | ~500,000+ | ~800,000+ |
 | **Dependencies** | 0 | 30+ direct, 100+ total | 50+ direct, 200+ total |
 | **Vendor Folder Size** | 0 bytes | ~274 MB | ~350 MB |
 | **Fresh Install Time** | < 1 second | 2-5 minutes | 3-7 minutes |
@@ -59,6 +76,7 @@ php gen.php all public
 | **ORM** | Active Record | Eloquent (Active Record) | Doctrine (Data Mapper) |
 | **Template Engine** | Built-in (PHP) | Blade | Twig |
 | **Zero Config Setup** | ✅ Yes | ❌ No | ❌ No |
+| **Error Handling** | ✅ Debug page + console | ✅ Ignition | ✅ Profiler |
 | **Code You Can Read** | ✅ In one afternoon | ❌ Months | ❌ Never |
 | **Breaking Changes** | Rare | Every major version | Every major version |
 | **Learning Curve** | 1 day | 2 weeks | 1 month |
@@ -190,6 +208,7 @@ DB_HOST=localhost
 DB_NAME=myapp
 DB_USER=postgres
 DB_PASS=secret
+APP_DEBUG=true
 
 # Done.
 ```
@@ -212,7 +231,7 @@ You've spent your career dealing with:
 
 ### Zero Dependencies, Zero Compromises
 
-Modern PHP frameworks come with hundreds of dependencies. Falt Leap has **exactly zero**. Every line of code is in this repository. The entire framework is **2,191 lines**. You can read and understand it in an afternoon.
+Modern PHP frameworks come with hundreds of dependencies. Falt Leap has **exactly zero**. Every line of code is in this repository. The entire framework is **~3,000 lines**. You can read and understand it in an afternoon.
 
 ```bash
 # No composer install
@@ -313,9 +332,32 @@ We don't dictate your frontend stack, but we have opinions:
 
 Frontend complexity is optional, not mandatory.
 
-## What's New in Version 0.2?
+## What's New in Version 0.3?
 
-### 1. **Advanced Query Builder**
+### 1. **Error Handling System with Debug Page**
+
+A complete error handling system that replaces bare `echo`/`die()` calls with proper exception handling throughout the framework.
+
+**Debug mode** (`APP_DEBUG=true`) gives you a rich, self-contained error page:
+
+- Dark-themed UI with no external dependencies
+- Exception class, message, and file:line at a glance
+- Clickable stack trace sidebar with source code preview (error line highlighted)
+- Tabs for Request, Session, and Environment data (passwords auto-masked)
+- Interactive PHP console at the bottom for inspecting runtime state
+- Syntax errors caught before execution via `php -l` lint checks on controllers and views
+
+**Production mode** (`APP_DEBUG=false`) shows a clean Bootstrap error page with a reference ID. Full details are logged to `storage/logs/error.log`.
+
+```php
+// .env
+APP_DEBUG=true   // Rich debug page with stack traces and console
+APP_DEBUG=false  // Clean error page, details in storage/logs/error.log
+```
+
+The debug console is security-restricted to local/private IPs only. Database connection failures, missing routes, missing views, and PHP errors all flow through the same handler.
+
+### 2. **Advanced Query Builder**
 
 Build complex queries with joins, aggregates, grouping, and nested conditions:
 
@@ -345,7 +387,7 @@ $topCustomers = Orders::Query()
     ->get();
 ```
 
-### 2. **Middleware Pipeline**
+### 3. **Middleware Pipeline**
 
 Composable middleware with automatic dependency injection:
 
@@ -369,7 +411,7 @@ class RateLimitMiddleware extends LeapMiddleware {
 
 No configuration files. No service providers. Just extend `LeapMiddleware` and use it.
 
-### 3. **PSR-4 Autoloader**
+### 4. **PSR-4 Autoloader**
 
 Proper namespacing with automatic class loading:
 
@@ -381,7 +423,7 @@ namespace App\Middleware;
 // No manual requires. Ever.
 ```
 
-### 4. **.env Configuration**
+### 5. **.env Configuration**
 
 Environment-based configuration without external packages:
 
@@ -395,7 +437,7 @@ APP_DEBUG=true
 $debug = LeapEnv::get('APP_DEBUG', false);
 ```
 
-### 5. **Strict Types Everywhere**
+### 6. **Strict Types Everywhere**
 
 Every framework file uses `declare(strict_types=1)`. Because it's 2025 and we should know our types.
 
@@ -405,7 +447,7 @@ Every framework file uses `declare(strict_types=1)`. Because it's 2025 and we sh
 
 We're not anti-dependency. We're anti-complexity. Every external package is a potential security risk, maintenance burden, and breaking change waiting to happen. Falt Leap is entirely self-contained.
 
-**The entire framework is 2,191 lines.** That's less than a single Laravel controller in some projects.
+**The entire framework is ~3,000 lines.** That's less than a single Laravel controller in some projects.
 
 ### 2. **PostgreSQL Only**
 
@@ -450,40 +492,6 @@ $result = $this->db->query("SELECT * FROM users WHERE created_at > NOW() - INTER
 
 We don't try to turn SQL into an object-oriented query language. SQL is already great.
 
-## Quick Start
-
-### Installation
-
-```bash
-git clone <repository-url>
-cd sensorboard
-./run.sh  # Docker development server on http://localhost:8090
-```
-
-Or configure manually:
-
-1. Create `/conf/db.config.php`:
-
-```php
-<?php
-$dbhost = "localhost";
-$dbusername = "your_user";
-$dbpassword = "your_password";
-$dbdatabase = "your_database";
-$dbschema = "public";
-?>
-```
-
-2. Generate models from your schema:
-
-```bash
-php gen.php all
-```
-
-3. Point your web server to `/public/`
-
-That's it. No `composer install`. No `npm install`. No webpack config.
-
 ### Your First Route
 
 **1. Add route** in `/conf/router.config.php`:
@@ -521,7 +529,7 @@ Done. No service providers to register. No middleware to configure. No build pro
 
 ## Architecture
 
-### Core Components (All in `/lib/` - **2,191 lines total**)
+### Core Components (All in `/lib/` - **~3,000 lines total**)
 
 Every component is documented, typed, and readable:
 
@@ -534,13 +542,18 @@ Every component is documented, typed, and readable:
 - **LeapDB**: PostgreSQL PDO wrapper with schema support and prepared statements
 - **LeapRequest**: HTTP request abstraction with type-safe helpers
 - **LeapSession**: Session management with flash message support
+- **LeapErrorHandler**: Global error/exception handler with rich debug page and production error page
+- **LeapDebugConsole**: Interactive PHP console for inspecting runtime state during errors
+- **LeapHttpException**: Base HTTP exception with status code support
+- **LeapNotFoundException**: 404 exception for missing routes, controllers, views
+- **LeapSyntaxException**: Syntax error exception with source file/line context
 - **LeapWebSocketServer**: Built-in WebSocket server for real-time features
 - **LeapAutoloader**: PSR-4 compliant autoloader (~145 lines)
 - **LeapMiddleware**: Abstract middleware base class with dependency injection
 - **LeapMiddlewareStack**: Middleware pipeline executor (~115 lines)
 - **LeapEnv**: Zero-dependency .env file parser (~107 lines)
 
-**Total framework size: 2,191 lines.** You can read it all in one sitting.
+**Total framework size: ~3,000 lines across 19 files.** You can read it all in one sitting.
 
 ### Request Lifecycle
 
@@ -549,9 +562,13 @@ HTTP Request
     ↓
 /public/index.php (loads PSR-4 autoloader + .env)
     ↓
+LeapErrorHandler registers (catches all errors/exceptions from here on)
+    ↓
 LeapEngine->start($routes)
     ↓
 LeapRouter->getRoute($url) → extracts controller, method, middleware
+    ↓
+Lint check on controller (debug mode) → LeapSyntaxException on failure
     ↓
 LeapMiddlewareStack builds pipeline
     ↓
@@ -561,9 +578,13 @@ Controller instantiation (auto-injected: db, request, session, view)
     ↓
 Controller method execution
     ↓
-View rendering (with optional layout + flash messages)
+View rendering (lint check + layout + flash messages)
     ↓
 HTTP Response
+
+    ⚡ Any uncaught exception at any step → LeapErrorHandler
+       → Debug mode:  Rich error page with stack trace + interactive console
+       → Production:  Clean error page + logged to storage/logs/error.log
 ```
 
 Straightforward. Predictable. **You can trace every line of execution.**
@@ -607,7 +628,7 @@ class Users extends LeapModel {
 
 - ✅ **Value simplicity over abstraction** - You're tired of 10 layers between you and the database
 - ✅ **Trust PostgreSQL more than ORMs** - You know PostgreSQL can do things Laravel's query builder can't
-- ✅ **Want to understand your framework** - All 2,191 lines of it
+- ✅ **Want to understand your framework** - All ~3,000 lines of it
 - ✅ **Prefer convention over configuration** - Routes are arrays, not YAML manifests
 - ✅ **Think modern frameworks have gotten ridiculous** - When did a TODO app need 400 dependencies?
 - ✅ **Build real applications** - CRUD apps, dashboards, internal tools, SaaS backends, APIs
@@ -639,13 +660,16 @@ When you could understand your entire stack. When "upgrading" didn't mean 3 days
 /conf/             Configuration files
   ├── db.config.php         Database connection
   └── router.config.php     Route definitions
-/lib/              Framework core (8 classes, zero dependencies)
+/lib/              Framework core (19 classes, zero dependencies)
 /models/           Generated model classes
 /public/           Web root (index.php entry point)
-/storage/          Session storage
+/storage/          Runtime data (gitignored)
+  ├── /logs/               Error logs (error.log)
+  └── /debug/              Debug console context files
 /views/            Templates (.leap.php extension)
   └── index.leap.php        Master layout
 /container/        Docker development environment
+.env               Environment config (DB credentials, APP_DEBUG)
 gen.php            Model generator
 run.sh             Docker dev server launcher
 ```
@@ -662,11 +686,12 @@ Modern frameworks give you everything. Falt Leap gives you **what you actually n
 - **Middleware** - Composable pipelines without complexity
 - **Template rendering** - Layouts, partials, flash messages
 - **Session management** - Built-in, secure, straightforward
+- **Error handling** - Debug page with stack traces, console, and production-safe error screens
 - **Database connection** - PostgreSQL-native with schema support
 - **Autoloading** - PSR-4 compliant, zero-config
 - **.env support** - Configuration without packages
 
-**Total: 2,191 lines.**
+**Total: ~3,000 lines.** Including a full error handling system with interactive debug console.
 
 Everything else? That's your code to write, not framework bloat to maintain. Need queues? Write a queue. Need emails? Send emails. You're a developer, not a framework configurator.
 
@@ -740,10 +765,10 @@ $ git clone faltleap myapp
 $ du -sh myapp/lib
 124K    myapp/lib
 $ find myapp/lib -name "*.php" | wc -l
-14 files
+19 files
 ```
 
-**274MB vs 124KB. 32,847 files vs 14 files.**
+**274MB vs 124KB. 32,847 files vs 19 files.**
 
 And you know what? The Falt Leap version will still be working in 5 years. No breaking changes. No deprecated APIs. No surprise rewrites.
 
@@ -835,4 +860,4 @@ And then build something great.
 
 **Built with conviction. Powered by PostgreSQL. Zero dependencies, zero regrets.**
 
-**Version 0.2** • 2,191 lines • 14 files • ∞ possibilities
+**Version 0.3** • ~3,000 lines • 19 files • ∞ possibilities
