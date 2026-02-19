@@ -62,6 +62,20 @@ class HomeController extends LeapController
         "Everyone's using AI to write glue code. We just don't have glue code.",
         "LLMs are great at summarizing complexity. We skipped the complexity part.",
         "The best use of AI is not needing it. Welcome to FaltLeap.",
+
+        // Go and Rust roasts
+        "Go devs write if err != nil 47 times. FaltLeap devs ship features.",
+        "Rust guarantees memory safety. FaltLeap guarantees you'll go home on time.",
+        "They rewrote their PHP app in Go. It's 4ms faster and took 6 months longer.",
+        "Rust developers mass-rewrite everything in Rust. FaltLeap developers just deploy.",
+        "Go promised simplicity. Then added generics anyway. FaltLeap was simple from day one.",
+        "Your Rust web app compiles in 12 minutes. FaltLeap refreshes in 12 milliseconds.",
+        "Go was designed at Google by geniuses. FaltLeap was designed to not need one.",
+        "Rust: fighting the borrow checker so your web form can submit. FaltLeap: just submit.",
+        "Go needs a goroutine to feel special. FaltLeap needs a browser and a dream.",
+        "They spent a year rewriting their CRUD app in Rust. FaltLeap had it done before lunch.",
+        "Go error handling: 30% of your codebase. FaltLeap error handling: an exception.",
+        "Rust devs mass-explain why lifetimes matter for a login page. FaltLeap devs are at the pub.",
     ];
 
     public function welcome()
