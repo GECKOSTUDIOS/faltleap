@@ -257,6 +257,20 @@
     .code-block .function { color: #d2a8ff; }
     .code-block .class    { color: #7ee787; }
 
+    .code-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--brand);
+      background: rgba(255, 102, 0, 0.1);
+      border: 1px solid rgba(255, 102, 0, 0.25);
+      padding: 0.2rem 0.65rem;
+      border-radius: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
     /* Footer */
     .welcome-footer {
       border-top: 1px solid var(--border-color);
@@ -426,19 +440,32 @@
       <h2>See how <span>simple</span> it is</h2>
       <p class="code-subtitle">Routes map to controllers. Controllers talk to models. That's it.</p>
 
-      <div class="code-block">
-<pre style="margin:0; color: var(--text-primary);"><span class="comment">// conf/router.config.php</span>
+      <!-- Routing -->
+      <div class="code-block mb-4">
+        <div class="code-label">Routing</div>
+<pre style="margin:0; color: var(--text-primary);"><span class="comment">// conf/router.config.php — the entire routing file</span>
 <span class="variable">$routes</span> = [
+    <span class="string">"/"</span>               =&gt; <span class="string">"HomeController@welcome"</span>,
     <span class="string">"/users"</span>          =&gt; [<span class="string">"UsersController@index"</span>, <span class="string">"auth"</span>],
     <span class="string">"/users/edit/{id}"</span> =&gt; [
         <span class="string">"GET"</span>  =&gt; [<span class="string">"UsersController@edit"</span>,   <span class="string">"auth"</span>],
         <span class="string">"POST"</span> =&gt; [<span class="string">"UsersController@update"</span>, <span class="string">"auth"</span>],
     ],
-];
+];</pre>
+      </div>
 
-<span class="comment">// app/UsersController.php</span>
+      <!-- Controller -->
+      <div class="code-block mb-4">
+        <div class="code-label">Controller</div>
+<pre style="margin:0; color: var(--text-primary);"><span class="comment">// app/UsersController.php — a complete controller</span>
 <span class="keyword">class</span> <span class="class">UsersController</span> <span class="keyword">extends</span> <span class="class">LeapController</span>
 {
+    <span class="keyword">public function</span> <span class="function">index</span>()
+    {
+        <span class="variable">$this</span>-&gt;view-&gt;data = <span class="class">Users</span>::<span class="function">Query</span>()-&gt;<span class="function">get</span>();
+        <span class="variable">$this</span>-&gt;view-&gt;<span class="function">render</span>(<span class="string">'users/index'</span>);
+    }
+
     <span class="keyword">public function</span> <span class="function">edit</span>(<span class="variable">$id</span>)
     {
         <span class="variable">$user</span> = <span class="class">Users</span>::<span class="function">Query</span>()-&gt;<span class="function">where</span>(<span class="string">"id = :id"</span>, [<span class="string">":id"</span> =&gt; <span class="variable">$id</span>])-&gt;<span class="function">first</span>();
@@ -446,6 +473,52 @@
         <span class="variable">$this</span>-&gt;view-&gt;<span class="function">render</span>(<span class="string">'users/edit'</span>);
     }
 }</pre>
+      </div>
+
+      <!-- Active Record -->
+      <div class="code-block mb-4">
+        <div class="code-label">Active Record</div>
+<pre style="margin:0; color: var(--text-primary);"><span class="comment">// Find, modify, save — that's the whole ORM</span>
+<span class="variable">$user</span> = <span class="class">Users</span>::<span class="function">Query</span>()-&gt;<span class="function">where</span>(<span class="string">"username = :u"</span>, [<span class="string">":u"</span> =&gt; <span class="string">"admin"</span>])-&gt;<span class="function">first</span>();
+<span class="variable">$user</span>-&gt;name = <span class="string">"New Name"</span>;
+<span class="variable">$user</span>-&gt;<span class="function">save</span>();
+
+<span class="comment">// Create a new record</span>
+<span class="variable">$user</span> = <span class="keyword">new</span> <span class="class">Users</span>();
+<span class="variable">$user</span>-&gt;<span class="function">loadFromRequest</span>(<span class="variable">$this</span>-&gt;request);
+<span class="variable">$user</span>-&gt;<span class="function">save</span>();
+
+<span class="comment">// Delete</span>
+<span class="class">Users</span>::<span class="function">delete</span>(<span class="variable">$id</span>);</pre>
+      </div>
+
+      <!-- Views -->
+      <div class="code-block mb-4">
+        <div class="code-label">Views</div>
+<pre style="margin:0; color: var(--text-primary);"><span class="comment">&lt;!-- views/users/index.leap.php — auto-escaped by default --&gt;</span>
+&lt;<span class="keyword">table</span> <span class="variable">class</span>=<span class="string">"table"</span>&gt;
+  <span class="keyword">&lt;?php foreach</span> (<span class="variable">$this</span>-&gt;data <span class="keyword">as</span> <span class="variable">$user</span>) : <span class="keyword">?&gt;</span>
+    &lt;<span class="keyword">tr</span>&gt;
+      &lt;<span class="keyword">td</span>&gt;<span class="keyword">&lt;?=</span> <span class="variable">$user</span>-&gt;username <span class="keyword">?&gt;</span>&lt;/<span class="keyword">td</span>&gt;
+      &lt;<span class="keyword">td</span>&gt;<span class="keyword">&lt;?=</span> <span class="variable">$user</span>-&gt;name <span class="keyword">?&gt;</span>&lt;/<span class="keyword">td</span>&gt;
+      &lt;<span class="keyword">td</span>&gt;&lt;<span class="keyword">a</span> <span class="variable">href</span>=<span class="string">"/users/edit/<span class="keyword">&lt;?=</span> <span class="variable">$user</span>-&gt;id <span class="keyword">?&gt;</span>"</span>&gt;Edit&lt;/<span class="keyword">a</span>&gt;&lt;/<span class="keyword">td</span>&gt;
+    &lt;/<span class="keyword">tr</span>&gt;
+  <span class="keyword">&lt;?php endforeach; ?&gt;</span>
+&lt;/<span class="keyword">table</span>&gt;</pre>
+      </div>
+
+      <!-- Model Generation -->
+      <div class="code-block">
+        <div class="code-label">Model Generation</div>
+<pre style="margin:0; color: var(--text-primary);"><span class="comment"># Models are generated from your database. Not hand-written.</span>
+<span class="variable">$</span> php gen.php all
+
+<span class="class">Generated:</span> Users.model.php
+<span class="class">Generated:</span> Orders.model.php
+<span class="class">Generated:</span> Products.model.php
+
+<span class="comment"># Schema changes? Regenerate. Done.</span>
+<span class="variable">$</span> php gen.php users</pre>
       </div>
     </div>
   </section>
