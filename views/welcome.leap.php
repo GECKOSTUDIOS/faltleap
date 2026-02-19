@@ -354,13 +354,13 @@
         function cycle() {
           rainDown(function() {
             typeIn(pick(), function() {
-              timeout = setTimeout(cycle, 3000);
+              timeout = setTimeout(cycle, 5000);
             });
           });
         }
 
         typeIn(pick(), function() {
-          timeout = setTimeout(cycle, 3000);
+          timeout = setTimeout(cycle, 5000);
         });
       })();
       </script>
