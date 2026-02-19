@@ -1,3 +1,4 @@
+.env
 conf/db.config.php
 migrations/00-users.sql
 execute

@@ -80,7 +80,8 @@ class HomeController extends LeapController
 
     public function welcome()
     {
-        $this->view->data = (object) [
+        $this->view->rawData = (object) [
+            'taglines' => self::TAGLINES,
             'tagline' => self::TAGLINES[array_rand(self::TAGLINES)],
         ];
         $this->view->single('welcome');

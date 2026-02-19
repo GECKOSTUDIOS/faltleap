@@ -76,9 +76,47 @@
     .hero .tagline {
       font-size: 1.25rem;
       color: var(--text-secondary);
-      max-width: 550px;
+      max-width: 600px;
       margin: 1rem auto 0;
       font-style: italic;
+      min-height: 3.5em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tagline-word {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .tagline-char {
+      display: inline-block;
+      transition: none;
+    }
+
+    .tagline-char.falling {
+      position: relative;
+      animation: charFall 0.5s ease-in forwards;
+    }
+
+    @keyframes charFall {
+      0%   { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(60px); opacity: 0; }
+    }
+
+    .tagline-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.2em;
+      background: var(--brand);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: cursorBlink 0.6s step-end infinite;
+    }
+
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0; }
     }
 
     /* Stats row */
@@ -247,7 +285,85 @@
         <span>Falt Leap</span> Framework
       </h1>
 
-      <p class="tagline fade-in fade-in-delay-2"><?php echo $this->data->tagline; ?></p>
+      <p class="tagline fade-in fade-in-delay-2" id="tagline"><span class="tagline-cursor"></span></p>
+      <script>
+      (function() {
+        const taglines = <?php echo json_encode($this->rawData->taglines); ?>;
+        const el = document.getElementById('tagline');
+        let current = -1;
+        let timeout = null;
+
+        function pick() {
+          let idx;
+          do { idx = Math.floor(Math.random() * taglines.length); } while (idx === current && taglines.length > 1);
+          current = idx;
+          return taglines[idx];
+        }
+
+        function rainDown(callback) {
+          var chars = el.querySelectorAll('.tagline-char');
+          if (chars.length === 0) { callback(); return; }
+
+          chars.forEach(function(c) {
+            var delay = Math.random() * 300;
+            setTimeout(function() {
+              c.classList.add('falling');
+            }, delay);
+          });
+
+          setTimeout(function() {
+            callback();
+          }, 800);
+        }
+
+        function typeIn(text, callback) {
+          el.innerHTML = '';
+          var cursor = document.createElement('span');
+          cursor.className = 'tagline-cursor';
+          el.appendChild(cursor);
+
+          var i = 0;
+          var currentWord = null;
+          var speed = Math.max(15, Math.min(35, 1400 / text.length));
+
+          function next() {
+            if (i < text.length) {
+              if (text[i] === ' ') {
+                currentWord = null;
+                el.insertBefore(document.createTextNode(' '), cursor);
+              } else {
+                if (!currentWord) {
+                  currentWord = document.createElement('span');
+                  currentWord.className = 'tagline-word';
+                  el.insertBefore(currentWord, cursor);
+                }
+                var s = document.createElement('span');
+                s.className = 'tagline-char';
+                s.textContent = text[i];
+                currentWord.appendChild(s);
+              }
+              i++;
+              timeout = setTimeout(next, speed);
+            } else {
+              callback();
+            }
+          }
+          next();
+        }
+
+        function cycle() {
+          rainDown(function() {
+            typeIn(pick(), function() {
+              timeout = setTimeout(cycle, 3000);
+            });
+          });
+        }
+
+        typeIn(pick(), function() {
+          timeout = setTimeout(cycle, 3000);
+        });
+      })();
+      </script>
 
       <div class="stats-row fade-in fade-in-delay-3">
         <div class="stat-item">
